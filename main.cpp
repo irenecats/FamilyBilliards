@@ -3,11 +3,11 @@
 int main()
 {
     // Create the main window
-    sf::RenderWindow app(sf::VideoMode(800, 600), "SFML window");
+    sf::RenderWindow app(sf::VideoMode(800, 600), "Family Billiards");
 
     // Load a sprite to display
     sf::Texture texture;
-    if (!texture.loadFromFile("cb.bmp"))
+    if (!texture.loadFromFile("resources/bola1.png"))
         return EXIT_FAILURE;
     sf::Sprite sprite(texture);
 
