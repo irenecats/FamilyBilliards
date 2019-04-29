@@ -1,8 +1,7 @@
-#include "Animacion.h"
+#include "Palo.h"
 
-Animacion::Animacion(){}
 
-Animacion::Animacion(sf::Texture& text)
+Palo::Palo(sf::Texture& text)
 {
     palo.setTexture(text);
     palo.setTextureRect(sf::IntRect(43.0,22.0,800.0,14.0));
@@ -15,12 +14,7 @@ Animacion::Animacion(sf::Texture& text)
     cont=0;
 }
 
-Animacion::~Animacion()
-{
-    //dtor
-}
-
-void Animacion::Update(float timeElapsed, int estado)
+void Palo::Update(float timeElapsed, int estado)
 {
     float   movimiento=0;
 
@@ -110,14 +104,14 @@ void Animacion::Update(float timeElapsed, int estado)
 
 }
 
-void Animacion::RenderPalo(sf::RenderWindow& window, float percentTick)
+void Palo::Render(sf::RenderWindow& window, float percentTick)
 {
     float paloX = paloPos.getPrimera().x*(1-percentTick) + paloPos.getSegunda().x*percentTick;
     palo.setPosition(paloX, paloPos.getPrimera().y);
     window.draw(palo);
 }
 
-void Animacion::tiroBola()
+void Palo::tiroBola()
 {
     dir = true;
     terminado=false;
@@ -128,7 +122,7 @@ void Animacion::tiroBola()
 
 }
 
-void Animacion::calculoVelocidad(){
+void Palo::calculoVelocidad(){
     float posNorm = 0;
             if(palo.getPosition().x<42.5)
             {
@@ -144,17 +138,28 @@ void Animacion::calculoVelocidad(){
             }
             std::cout<<"POS TIRO "<<posNorm<<std::endl;
             posNorm = (posNorm-42.5)/627.5;
-            float vel = (0.4*posNorm) + 0.1;
+            float vel = (0.3*posNorm) + 0.1;
             std::cout<<"POS TIRO "<<posNorm<<std::endl;
             std::cout<<"VEL TIRO "<<vel<<std::endl;
             posPulsado = 0;
             Juego::Instance()->tiraBola(vel);
 }
 
-bool Animacion::getTerminado(){
+bool Palo::getTerminado(){
     return terminado;
 }
 
-void Animacion::setTerminado(bool val){
+void Palo::setTerminado(bool val){
     terminado = val;
+}
+
+
+Palo::Palo()
+{
+    //ctor
+}
+
+Palo::~Palo()
+{
+    //dtor
 }

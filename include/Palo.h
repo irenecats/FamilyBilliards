@@ -1,5 +1,5 @@
-#ifndef ANIMACION_H
-#define ANIMACION_H
+#ifndef PALO_H
+#define PALO_H
 #include <SFML/Graphics.hpp>
 #include <stdio.h>
 #include <iostream>
@@ -8,14 +8,14 @@
 
 #define VEL_MAX 0.4f
 #define VEL_MIN 0.1f
-class Animacion
+
+class Palo
 {
     public:
-        Animacion(sf::Texture& text);
-        Animacion();
-        virtual ~Animacion();
-        void RenderPuntos(sf::RenderWindow&,float);
-        void RenderPalo(sf::RenderWindow&,float);
+        Palo();
+        Palo(sf::Texture& text);
+        virtual ~Palo();
+        void Render(sf::RenderWindow&,float);
         void Update(float, int);
         void tiroBola();
         bool getTerminado();
@@ -32,4 +32,4 @@ class Animacion
     posInterpolacion        paloPos;
 };
 
-#endif // ANIMACION_H
+#endif // PALO_H

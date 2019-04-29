@@ -3,16 +3,17 @@
 	<SFML/Graphics.hpp>
 	<Juego.h>
 
-1556058602 /home/irene/Desktop/FamilyBilliards/include/Juego.h
+1556565424 /home/irene/Desktop/FamilyBilliards/include/Juego.h
 	<stdio.h>
 	<SFML/Graphics.hpp>
 	<algorithm>
 	<math.h>
 	<Bola.h>
 	<Jugador.h>
-	<Animacion.h>
+	<Palo.h>
+	<Abaco.h>
 
-1556058514 source:/home/irene/Desktop/FamilyBilliards/src/Juego.cpp
+1556574779 source:/home/irene/Desktop/FamilyBilliards/src/Juego.cpp
 	"Juego.h"
 
 1555589931 source:/home/irene/Desktop/FamilyBilliards/src/Bolas.cpp
@@ -20,19 +21,19 @@
 
 1555589931 /home/irene/Desktop/FamilyBilliards/include/Bolas.h
 
-1556033700 /home/irene/Desktop/FamilyBilliards/include/Bola.h
+1556554653 /home/irene/Desktop/FamilyBilliards/include/Bola.h
 	<SFML/Graphics.hpp>
 	<posInterpolacion.h>
 	<iostream>
 	<math.h>
 
-1556044156 source:/home/irene/Desktop/FamilyBilliards/src/Bola.cpp
+1556562724 source:/home/irene/Desktop/FamilyBilliards/src/Bola.cpp
 	"Bola.h"
 
-1556054521 source:/home/irene/Desktop/FamilyBilliards/src/Jugador.cpp
+1556291262 source:/home/irene/Desktop/FamilyBilliards/src/Jugador.cpp
 	"Jugador.h"
 
-1556052622 /home/irene/Desktop/FamilyBilliards/include/Jugador.h
+1556289495 /home/irene/Desktop/FamilyBilliards/include/Jugador.h
 	<SFML/Graphics.hpp>
 	<posInterpolacion.h>
 	<iostream>
@@ -45,13 +46,31 @@
 1555783249 source:/home/irene/Desktop/FamilyBilliards/src/posInterpolacion.cpp
 	"posInterpolacion.h"
 
-1556057090 /home/irene/Desktop/FamilyBilliards/include/Animacion.h
+1556123581 /home/irene/Desktop/FamilyBilliards/include/Animacion.h
 	<SFML/Graphics.hpp>
 	<stdio.h>
 	<iostream>
 	<posInterpolacion.h>
 	<Juego.h>
 
-1556057188 source:/home/irene/Desktop/FamilyBilliards/src/Animacion.cpp
+1556107737 source:/home/irene/Desktop/FamilyBilliards/src/Animacion.cpp
 	"Animacion.h"
+
+1556305490 source:/home/irene/Desktop/FamilyBilliards/src/Abaco.cpp
+	"Abaco.h"
+
+1556303429 /home/irene/Desktop/FamilyBilliards/include/Abaco.h
+	<iostream>
+	<SFML/Graphics.hpp>
+	<posInterpolacion.h>
+
+1556559092 source:/home/irene/Desktop/FamilyBilliards/src/Palo.cpp
+	"Palo.h"
+
+1556218723 /home/irene/Desktop/FamilyBilliards/include/Palo.h
+	<SFML/Graphics.hpp>
+	<stdio.h>
+	<iostream>
+	<posInterpolacion.h>
+	<Juego.h>
 

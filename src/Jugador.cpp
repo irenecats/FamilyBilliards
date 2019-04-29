@@ -69,6 +69,15 @@ void Jugador::Update(float timeElapsed)
     //pointer.move(0,);
 }
 
+void Jugador::Render(sf::RenderWindow& window, float percentTick)
+{
+
+    float pointerX = posicion.getPrimera().x*(1-percentTick) + posicion.getSegunda().x*percentTick;
+    float pointerY = posicion.getPrimera().y*(1-percentTick) + posicion.getSegunda().y*percentTick;
+    pointer.setPosition(pointerX, pointerY);
+    window.draw(pointer);
+}
+
 void Jugador::setPointer(sf::Texture& text)
 {
 
@@ -81,31 +90,18 @@ void Jugador::setPointer(sf::Texture& text)
     posicion.setPrimera(pos);
     posicion.setSegunda(pos);
     velocidad = sf::Vector2f(0.f,0.f);
-}
-
-void Jugador::Render(sf::RenderWindow& window, float percentTick)
-{
-
-    float pointerX = posicion.getPrimera().x*(1-percentTick) + posicion.getSegunda().x*percentTick;
-    float pointerY = posicion.getPrimera().y*(1-percentTick) + posicion.getSegunda().y*percentTick;
-    pointer.setPosition(pointerX, pointerY);
-    window.draw(pointer);
-}
-
-sf::Vector2f Jugador::getPosition(){
-    return  posicion.getSegunda();
+    puntuacion = 0;
 }
 
 void    Jugador::apuntado(sf::Vector2f blanca,sf::Vector2f menor){
     sf::Vector2f vect(menor.x-blanca.x, menor.y-blanca.y);;
 
-    float angulo = atan2(vect.y,vect.x);
     float mod = sqrt((vect.x*vect.x)+(vect.y*vect.y));
-    std::cout<<"POS Blanca: "<<blanca.x<<" - "<<blanca.y<<std::endl;
-    std::cout<<"POS Menor : "<<menor.x<<" - "<<menor.y<<std::endl;
+    //std::cout<<"POS Blanca: "<<blanca.x<<" - "<<blanca.y<<std::endl;
+    //std::cout<<"POS Menor : "<<menor.x<<" - "<<menor.y<<std::endl;
     vect = vect/mod;
     vect*=50.f;
-    std::cout<<"Vector :"<<vect.x<<" - "<<vect.y<<std::endl;
+    //std::cout<<"Vector :"<<vect.x<<" - "<<vect.y<<std::endl;
     posicion.setPrimera(sf::Vector2f(blanca.x + vect.x, blanca.y + vect.y));
     posicion.setSegunda(sf::Vector2f(blanca.x + vect.x,blanca.y + vect.y));
     //bolas[0].setVelocidad(sf::Vector2f(vel*cos(angulo),vel*sin(angulo)));
@@ -113,6 +109,18 @@ void    Jugador::apuntado(sf::Vector2f blanca,sf::Vector2f menor){
 
      //std::cout<<"Angulo"<<(angulo* 180 / 3.14159265)<<std::endl;
      //std::cout<<"cos "<<cos(angulo)<<" sin "<<sin(angulo)<<std::endl;
+}
+
+void Jugador::addPuntuacion(int puntos){
+    puntuacion+=puntos;
+}
+
+sf::Vector2f Jugador::getPosition(){
+    return  posicion.getSegunda();
+}
+
+int Jugador::getPuntuacion(){
+   return puntuacion;
 }
 
 Jugador::Jugador()
