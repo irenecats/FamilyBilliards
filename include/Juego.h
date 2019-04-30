@@ -9,7 +9,7 @@
 #include <Palo.h>
 #include <Abaco.h>
 
-#define UPDATE_TIME (1000/30)
+#define UPDATE_TIME (1000/60)
 
 class Juego
 {

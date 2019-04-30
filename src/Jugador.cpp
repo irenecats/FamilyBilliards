@@ -54,19 +54,28 @@ void Jugador::Update(float timeElapsed)
         }
     }
 
-    velocidad = movimiento;
-
     posicion.setPrimera(posicion.getSegunda());
+
+    sf::Vector2f pos2(posicion.getPrimera().x+movimiento.x*timeElapsed,posicion.getPrimera().y+movimiento.y*timeElapsed);
+    if(pos2.x<45)
+    {
+        pos2.x = 45;
+    }
+    else if(pos2.x>757)
+    {
+        pos2.x = 757;
+    }
+
+    if(pos2.y<38){
+        pos2.y = 38;
+    }
+    else if(pos2.y>346){
+        pos2.y = 346;
+    }
 
     //std::cout<<"POS "<<pos<<std::endl;
 
-    posicion.setSegunda(sf::Vector2f(posicion.getPrimera().x+movimiento.x*timeElapsed,posicion.getPrimera().y+movimiento.y*timeElapsed));
-    /*
-     std::cout<<"Primera pos:"<<posicion.getPrimera().x<<" - "<<posicion.getPrimera().y<<std::endl;
-     std::cout<<"Segunda pos:"<<posicion.getSegunda().x<<" - "<<posicion.getSegunda().y<<std::endl;*/
-    // std::cout<<"velocidad "<<velocidad.x<<" - "<<velocidad.y<<std::endl;
-
-    //pointer.move(0,);
+    posicion.setSegunda(pos2);
 }
 
 void Jugador::Render(sf::RenderWindow& window, float percentTick)
@@ -89,11 +98,11 @@ void Jugador::setPointer(sf::Texture& text)
     pointer.setPosition(pos.x,pos.y);
     posicion.setPrimera(pos);
     posicion.setSegunda(pos);
-    velocidad = sf::Vector2f(0.f,0.f);
     puntuacion = 0;
 }
 
-void    Jugador::apuntado(sf::Vector2f blanca,sf::Vector2f menor){
+void    Jugador::apuntado(sf::Vector2f blanca,sf::Vector2f menor)
+{
     sf::Vector2f vect(menor.x-blanca.x, menor.y-blanca.y);;
 
     float mod = sqrt((vect.x*vect.x)+(vect.y*vect.y));
@@ -107,20 +116,28 @@ void    Jugador::apuntado(sf::Vector2f blanca,sf::Vector2f menor){
     //bolas[0].setVelocidad(sf::Vector2f(vel*cos(angulo),vel*sin(angulo)));
 
 
-     //std::cout<<"Angulo"<<(angulo* 180 / 3.14159265)<<std::endl;
-     //std::cout<<"cos "<<cos(angulo)<<" sin "<<sin(angulo)<<std::endl;
+    //std::cout<<"Angulo"<<(angulo* 180 / 3.14159265)<<std::endl;
+    //std::cout<<"cos "<<cos(angulo)<<" sin "<<sin(angulo)<<std::endl;
 }
 
-void Jugador::addPuntuacion(int puntos){
+void Jugador::addPuntuacion(int puntos)
+{
     puntuacion+=puntos;
 }
 
-sf::Vector2f Jugador::getPosition(){
+sf::Vector2f Jugador::getPosition()
+{
     return  posicion.getSegunda();
 }
 
-int Jugador::getPuntuacion(){
-   return puntuacion;
+int Jugador::getPuntuacion()
+{
+    return puntuacion;
+}
+
+void Jugador::setPuntuacion(int val)
+{
+    puntuacion = val;
 }
 
 Jugador::Jugador()

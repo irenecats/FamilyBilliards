@@ -18,17 +18,17 @@ void Juego::bucleJuego()
     printf("Creo la ventana\n");
 
     sf::View pantalla(sf::FloatRect(0, 0, 800.f, 600.f));
-    sf::View mapa(sf::FloatRect(0,0,100,100));
-    mapa.setViewport(sf::FloatRect(0.25, 0.75, 0.5, 0.25));
+    sf::View mapa(sf::FloatRect(0,0,200,60));
+    mapa.setViewport(sf::FloatRect(0.25, 0.75, 0.5, 0.20));
 
 
     sf::CircleShape circulo(1);
     sf::CircleShape circulo2(1);
     sf::CircleShape circulo3(1);
     sf::CircleShape circulo4(1);
-    circulo2.setPosition(95,0);
-    circulo3.setPosition(95,50);
-    circulo4.setPosition(0,50);
+    circulo2.setPosition(mapa.getSize().x-2,0);
+    circulo3.setPosition(mapa.getSize().x-2,mapa.getSize().y-2);
+    circulo4.setPosition(0,mapa.getSize().y-2);
     std::cout<<circulo.getPosition().x<<" - "<<circulo.getPosition().y<<std::endl;
 
     circulo.setFillColor(sf::Color::Red);
@@ -157,7 +157,7 @@ void Juego::bucleJuego()
                 }
                 else if(event.key.code == sf::Keyboard::R)
                 {
-//                    Reinicia();
+                    Reinicia();
                 }
             }
         }
@@ -174,11 +174,9 @@ void Juego::bucleJuego()
                 bolas[i].Update(timeElapsed);
             }
             palo.Update(timeElapsed, estado);
-
             //solo cuando las bolas empiezan a moverse detecto si se han parado y sus colisiones
             if(estado == 2 && palo.getTerminado() &&  bolasParadas())
             {
-                printf("EH\n");
                 if(caidas.size()>=1)
                 {
 
@@ -218,12 +216,6 @@ void Juego::bucleJuego()
         {
             palo.setTerminado(false);
         }
-        //si la animación ha terminado no dibujo el palo
-        if(!palo.getTerminado())
-        {
-            palo.Render(app,percentick);
-        }
-
         //Renders interpolados
         for(int i=0; i<bolas.size(); i++)
         {
@@ -235,13 +227,7 @@ void Juego::bucleJuego()
         {
             barra[i].Render(app,percentick);
         }
-        //Cuando las bolas están en movimiento no se dibuja el pointer
-        if(!palo.getTerminado())
-        {
-            Jugador::Instance()->Render(app,percentick);
-        }
-        abaco.Render(app,percentick);
-
+        /*
         for(int i=0; i<paredes.size(); i++)
         {
             app.draw(paredes[i]);
@@ -251,13 +237,24 @@ void Juego::bucleJuego()
         for(int i=0; i<troneras.size(); i++)
         {
             app.draw(troneras[i]);
+        }*/
+        if(estado==0 || estado==1){
+            Jugador::Instance()->Render(app,percentick);
         }
 
-        app.setView(mapa);
-        app.draw(circulo);
-        app.draw(circulo2);
-        app.draw(circulo3);
-        app.draw(circulo4);
+        if(estado == 0 || estado == 1 || (estado == 2 && !palo.getTerminado())){
+            palo.Render(app,percentick);
+
+            app.setView(mapa);
+            app.draw(circulo);
+            app.draw(circulo2);
+            app.draw(circulo3);
+            app.draw(circulo4);
+        }
+
+        if((estado == 2 && palo.getTerminado()) || estado == 3){
+              abaco.Render(app,percentick);
+        }
 
 
         // Update the window
@@ -287,28 +284,34 @@ void Juego::colisionParedes()
                 sf::Vector2f vel = bolas[j].getVelocidad();
                 if(i==1 || i==0)
                 {
-                    bolas[j].setPosSg(sf::Vector2f(bolas[j].getPosSg().x,paredes[i].getPosition().y+22));
+                    bolas[j].setPosSg(sf::Vector2f(bolas[j].getPosSg().x,paredes[i].getPosition().y+23));
+                    bolas[j].setPosPR(sf::Vector2f(bolas[j].getPosSg().x,paredes[i].getPosition().y+23));
+
                     vel.y=-vel.y;
                     bolas[j].setVelocidad(vel);
 
                 }
                 else if(i==2 || i==3)
                 {
-                    bolas[j].setPosSg(sf::Vector2f(bolas[j].getPosSg().x,paredes[i].getPosition().y-22));
+                    bolas[j].setPosSg(sf::Vector2f(bolas[j].getPosSg().x,paredes[i].getPosition().y-23));
+                    bolas[j].setPosPR(sf::Vector2f(bolas[j].getPosSg().x,paredes[i].getPosition().y-23));
                     vel.y=-vel.y;
                     bolas[j].setVelocidad(vel);
 
                 }
                 else if(i==4)
                 {
-                    bolas[j].setPosSg(sf::Vector2f(paredes[i].getPosition().x-22,bolas[j].getPosSg().y));
+                    bolas[j].setPosSg(sf::Vector2f(paredes[i].getPosition().x-23,bolas[j].getPosSg().y));
+                    bolas[j].setPosPR(sf::Vector2f(paredes[i].getPosition().x-23,bolas[j].getPosSg().y));
+
                     vel.x=-vel.x;
                     bolas[j].setVelocidad(vel);
 
                 }
                 else
                 {
-                    bolas[j].setPosSg(sf::Vector2f(paredes[i].getPosition().x+22,bolas[j].getPosSg().y));
+                    bolas[j].setPosSg(sf::Vector2f(paredes[i].getPosition().x+23,bolas[j].getPosSg().y));
+                    bolas[j].setPosPR(sf::Vector2f(paredes[i].getPosition().x+23,bolas[j].getPosSg().y));
                     vel.x=-vel.x;
                     bolas[j].setVelocidad(vel);
 
@@ -398,11 +401,11 @@ void Juego::choque(Bola& bola1, Bola& bola2)
         sf::Vector2f b1vel = bola1.getVelocidad();
         sf::Vector2f b2vel = bola2.getVelocidad();
 
-        float p = 2.0 * (normal.x * (b1vel.x-b2vel.x) + normal.y * (b1vel.y-b2vel.y)) / 4;
+        float p =2*(normal.x * (b1vel.x-b2vel.x) + normal.y * (b1vel.y-b2vel.y)) / 2;
 
 
-        bola1.setVelocidad(sf::Vector2f(b1vel.x - p *2* normal.x , b1vel.y - p *2* normal.y));
-        bola2.setVelocidad(sf::Vector2f(b2vel.x + p *2* normal.x , b2vel.y + p *2* normal.y));
+        bola1.setVelocidad(sf::Vector2f(b1vel.x - p * 0.8 * normal.x , b1vel.y - p * 0.8  * normal.y));
+        bola2.setVelocidad(sf::Vector2f(b2vel.x + p * 0.8 * normal.x , b2vel.y + p * 0.8  * normal.y));
 
 
         std::cout<<"Vel "<<bola1.getID()<<" :"<<bola1.getVelocidad().x<<" - "<<bola1.getVelocidad().y<<std::endl;
@@ -563,6 +566,20 @@ bool Juego::posValida(sf::Vector2f pos)
 int Juego::getEstado()
 {
     return estado;
+}
+
+void Juego::Reinicia(){
+    estado = 0;
+    caidasAux = 0;
+    primera = nullptr;
+    bolas.clear();
+    generaBolas();
+    abaco = Abaco();
+    Jugador::Instance()->setPuntuacion(0);
+    Jugador::Instance()->apuntado(bolas[0].getPosSg(),bolas[1].getPosSg());
+
+
+
 }
 
 Juego::Juego()

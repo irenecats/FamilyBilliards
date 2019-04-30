@@ -18,6 +18,7 @@ class Jugador
 
         sf::Vector2f    getPosition();
         int             getPuntuacion();
+        void            setPuntuacion(int);
 
 
     protected:
@@ -25,7 +26,6 @@ class Jugador
     static Jugador*             instancia;
             sf::Texture         textura;
             sf::Sprite          pointer;
-            sf::Vector2f        velocidad;
             posInterpolacion    posicion;
             int                 puntuacion;
 

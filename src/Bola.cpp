@@ -32,7 +32,7 @@ void Bola::Update(float timeElapsed)
 {
     //std::cout<<"velocidad "<<ID<<" "<<velocidad.x<<" - "<<velocidad.y<<std::endl;
     if(!animado){
-
+        /*
         if(abs(velocidad.y)<1.f && ID==2 )
         {
             if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
@@ -54,14 +54,14 @@ void Bola::Update(float timeElapsed)
             {
                 velocidad.x+=0.05f;
             }
-        }
+        }*/
 
         if((velocidad.x>0 && velocidad.x<0.001) || (velocidad.x<0 && velocidad.x>-0.001)){
             velocidad.x = 0;
         }
         else
         {
-                velocidad.x-=velocidad.x*0.03f;
+                velocidad.x-=velocidad.x*0.01f;
 
         }
 
@@ -70,7 +70,7 @@ void Bola::Update(float timeElapsed)
         }
         else
         {
-                velocidad.y-=velocidad.y*0.03f;
+                velocidad.y-=velocidad.y*0.01f;
 
         }
         controlaVelocidad();
