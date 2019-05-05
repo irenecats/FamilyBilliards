@@ -10,7 +10,14 @@ Jugador* Jugador::Instance()
 
     return instancia;
 }
+/*
+    El funcion de las teclas pulsadas el poninter se movera hacia un lado u
+    otro pudiendo moverse en diagonal. Además, el pointer no podra superar
+    los limites del mesa.
 
+    Si la tecla shift es pulsada, tanto la derecha como la izquierda,
+    el pointer se movera a mayor velocidad.
+*/
 void Jugador::Update(float timeElapsed)
 {
     sf::Vector2f movimiento(0.f,0.f);
@@ -34,23 +41,19 @@ void Jugador::Update(float timeElapsed)
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
         {
             movimiento.y=-vel;
-            //movimiento.y = -1;
         }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
         {
             movimiento.y=vel;
-            //movimiento.y = 1;
         }
 
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
         {
             movimiento.x=-vel;
-            //movimiento.x = -1;
         }
         if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
         {
             movimiento.x=vel;
-            //movimiento.x = 1;
         }
     }
 
@@ -87,6 +90,10 @@ void Jugador::Render(sf::RenderWindow& window, float percentTick)
     window.draw(pointer);
 }
 
+void Jugador::RenderPoints(sf::RenderWindow& window){
+    window.draw(textoPuntos);
+}
+
 void Jugador::setPointer(sf::Texture& text)
 {
 
@@ -99,30 +106,47 @@ void Jugador::setPointer(sf::Texture& text)
     posicion.setPrimera(pos);
     posicion.setSegunda(pos);
     puntuacion = 0;
+
+    if (!fuente.loadFromFile("resources/VCR_OSD_MONO.ttf"))
+    {
+        std::cerr << "Error al cargar la fuente\n" << std::endl;
+        exit(0);
+    }
+    textoPuntos.setColor(sf::Color::White);
+    textoPuntos.setFont(fuente);
+    textoPuntos.setCharacterSize(20);
+    textoPuntos.setString("Pts. "+std::to_string(puntuacion));
+    textoPuntos.setPosition(100,550);
 }
 
-void    Jugador::apuntado(sf::Vector2f blanca,sf::Vector2f menor)
+
+/*
+    Calculo el vector unitario entre la bola blanca y el puntero y lo multiplico
+    por la distancia de separacion que he visto correspondiente
+*/
+void Jugador::apuntado(sf::Vector2f blanca,sf::Vector2f menor)
 {
     sf::Vector2f vect(menor.x-blanca.x, menor.y-blanca.y);;
 
     float mod = sqrt((vect.x*vect.x)+(vect.y*vect.y));
-    //std::cout<<"POS Blanca: "<<blanca.x<<" - "<<blanca.y<<std::endl;
-    //std::cout<<"POS Menor : "<<menor.x<<" - "<<menor.y<<std::endl;
+
     vect = vect/mod;
     vect*=50.f;
-    //std::cout<<"Vector :"<<vect.x<<" - "<<vect.y<<std::endl;
+
     posicion.setPrimera(sf::Vector2f(blanca.x + vect.x, blanca.y + vect.y));
     posicion.setSegunda(sf::Vector2f(blanca.x + vect.x,blanca.y + vect.y));
-    //bolas[0].setVelocidad(sf::Vector2f(vel*cos(angulo),vel*sin(angulo)));
 
+    Mapa::Instance()->setAngulo((float)atan2(vect.y,vect.x));
 
-    //std::cout<<"Angulo"<<(angulo* 180 / 3.14159265)<<std::endl;
-    //std::cout<<"cos "<<cos(angulo)<<" sin "<<sin(angulo)<<std::endl;
 }
+
 
 void Jugador::addPuntuacion(int puntos)
 {
+    std::cout<<"TENGO MAS PUNTOS "<<puntos<<std::endl;
     puntuacion+=puntos;
+    std::cout<<"Totales "<<puntuacion<<std::endl;
+    textoPuntos.setString("Pts. "+std::to_string(puntuacion));
 }
 
 sf::Vector2f Jugador::getPosition()
@@ -138,6 +162,7 @@ int Jugador::getPuntuacion()
 void Jugador::setPuntuacion(int val)
 {
     puntuacion = val;
+    textoPuntos.setString("Pts. "+std::to_string(puntuacion));
 }
 
 Jugador::Jugador()

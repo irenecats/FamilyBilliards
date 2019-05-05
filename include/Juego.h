@@ -8,6 +8,7 @@
 #include <Jugador.h>
 #include <Palo.h>
 #include <Abaco.h>
+#include <Mapa.h>
 
 #define UPDATE_TIME (1000/60)
 
@@ -23,20 +24,23 @@ class Juego
     protected:
     private:
         //Variables
-       static Juego*        instancia;
-       sf::Texture          textura;
-       sf::Clock            relojUpdate;
-       std::vector<sf::Vector2f>  positions;
-       int                  estado; //0 apuntado, 1 tirando, 2 bolas en movimiento, 3 abaco
-       std::vector<sf::RectangleShape> paredes;
-       std::vector<sf::CircleShape> troneras;
+       static Juego*                    instancia;
+       sf::Texture                      textura;
+       sf::Clock                        relojUpdate;
+       bool                             debug;
+       std::vector<sf::Vector2f>        positions;
+       int                              estado; //0 apuntado, 1 tirando, 2 bolas en movimiento, 3 abaco
+       std::vector<sf::CircleShape>     troneras;
+       std::vector<sf::RectangleShape>  paredes;
+
+
      //  float                velTiro;
 
        Bola*                primera;
        std::vector<Bola>    bolas;
        std::vector<Bola>    barra;
        std::vector<Bola*>   caidas;
-       int                  caidasAux;
+       unsigned int                  caidasAux;
        int                  caidasCont;
 
        Abaco                abaco;

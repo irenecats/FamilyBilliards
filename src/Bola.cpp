@@ -8,54 +8,25 @@ Bola::Bola(int id,sf::Texture&  text, std::vector<sf::Vector2f> positions)
     sprite.setTextureRect(sf::IntRect(21*(id+1),0,21,21));
     sprite.setOrigin(21/2 , 21/2);
 
-    //sprite.set
     sf::Vector2f pos = positions[ID];
 
     posicion.setPrimera(pos);
     posicion.setSegunda(pos);
     animado = false;
     caida = false;
-//    caidas = 0;
-}
+    dist = 0;
 
-sf::Vector2f Bola::getSprite()
-{
-    return sprite.getPosition();
 }
-
-Bola::~Bola()
-{
-    //dtor
-}
-
+/*
+    Si no esta cayendo, disminuyo la velocidad un pocentaje determinado y segun el nuevo valor de velocidad
+    calculo la posicion.
+    Si esta cayendo, la bola se mueve hacia la izquierda hasta llegar a su posicion final que vendra determinada
+    por el numero de bolas que ya han caido.
+*/
 void Bola::Update(float timeElapsed)
 {
     //std::cout<<"velocidad "<<ID<<" "<<velocidad.x<<" - "<<velocidad.y<<std::endl;
     if(!animado){
-        /*
-        if(abs(velocidad.y)<1.f && ID==2 )
-        {
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-            {
-                velocidad.y-=0.05f;
-            }
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-            {
-                velocidad.y+=0.05f;
-            }
-        }
-        if(abs(velocidad.x)<1.f && ID==2)
-        {
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-            {
-                velocidad.x-=0.05f;
-            }
-            if(sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-            {
-                velocidad.x+=0.05f;
-            }
-        }*/
-
         if((velocidad.x>0 && velocidad.x<0.001) || (velocidad.x<0 && velocidad.x>-0.001)){
             velocidad.x = 0;
         }
@@ -98,6 +69,43 @@ void Bola::Render(sf::RenderWindow& window, float percentTick)
 }
 
 
+/*
+    En caso de que la bola debido a las colisiones supere el maximo
+     de velocidad permitido, la velocidad sera la maxima.
+     Por otro lado, si la velocidad es demasiado pequeña esta se volvera cero.
+*/
+void Bola::controlaVelocidad(){
+            float max_vel = 0.4;
+
+        if(velocidad.x>max_vel){
+            velocidad.x=max_vel;
+        }
+        else if(velocidad.x<-max_vel){
+            velocidad.x=-max_vel;
+        }
+
+        if(velocidad.y>max_vel){
+            velocidad.y=max_vel;
+        }else if(velocidad.y<-max_vel){
+            velocidad.y=-max_vel;
+        }
+
+        if((velocidad.x>0 && velocidad.x<0.001) || (velocidad.x<0 && velocidad.x>-0.001)){
+            velocidad.x = 0;
+        }
+
+        if((velocidad.y>0 && velocidad.y<0.001) || (velocidad.y<0 && velocidad.y>-0.001)){
+            velocidad.y = 0;
+        }
+}
+
+void Bola::calcDistancia(sf::Vector2f blanca){
+
+    sf::Vector2f  vect((posicion.getSegunda().x-blanca.x),(posicion.getSegunda().y-blanca.y));
+
+    dist = sqrt((vect.x*vect.x) + (vect.y*vect.y));
+}
+
 bool Bola::heParado()
 {
     bool parado = false;
@@ -113,11 +121,12 @@ void Bola::empezarAnimacion(float pos){
     posicion.setSegunda(sf::Vector2f(590,400));
     animado = true;
     posfinal = pos;
-    caida = false;
+
 }
 
 void Bola::terminarAnimacion(){
     animado = false;
+    caida = false;
     posfinal = 0;
 }
 
@@ -175,27 +184,19 @@ sf::FloatRect Bola::getGlobalBounds(){
     return sprite.getGlobalBounds();
 }
 
-void Bola::controlaVelocidad(){
-            float max_vel = 0.4;
 
-        if(velocidad.x>max_vel){
-            velocidad.x=max_vel;
-        }
-        else if(velocidad.x<-max_vel){
-            velocidad.x=-max_vel;
-        }
+float Bola::getDist(){
+    return dist;
+}
 
-        if(velocidad.y>max_vel){
-            velocidad.y=max_vel;
-        }else if(velocidad.y<-max_vel){
-            velocidad.y=-max_vel;
-        }
+sf::Vector2f Bola::getSprite()
+{
+    return sprite.getPosition();
+}
 
-        if((velocidad.x>0 && velocidad.x<0.001) || (velocidad.x<0 && velocidad.x>-0.001)){
-            velocidad.x = 0;
-        }
+Bola::Bola(){}
 
-        if((velocidad.y>0 && velocidad.y<0.001) || (velocidad.y<0 && velocidad.y>-0.001)){
-            velocidad.y = 0;
-        }
+Bola::~Bola()
+{
+    //dtor
 }

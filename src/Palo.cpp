@@ -13,39 +13,34 @@ Palo::Palo(sf::Texture& text)
     terminado=false;
     cont=0;
 }
-
+/*
+    Permite que el palo pueda moverse de un lado a otro de la pantalla
+    para simular el apuntado.
+    Una vez se haya decidido apuntar, el palo se quedara quieto unos segundos
+    y efectuara el golpe de la bola al finalizar el recorrido.
+*/
 void Palo::Update(float timeElapsed, int estado)
 {
     float   movimiento=0;
 
     if(estado == 1)
     {
-        //printf("Animo\n");
         if(paloPos.getPrimera().x>=42.5 && dir == false && paloPos.getPrimera().x<670)
         {
-            //printf("1\n");
-            //std::cout<<"DIR: "<<dir<<std::endl;
             movimiento = 0.5f;
 
         }
         else if(paloPos.getPrimera().x>=670 && dir == false)
         {
-            //printf("2\n");
-            //std::cout<<"DIR: "<<dir<<std::endl;
-            //movimiento = -0.5f;
             dir=true;
         }
         if(paloPos.getPrimera().x>42.5  && dir == true)
         {
-            //printf("1\n");
-            //std::cout<<"DIR: "<<dir<<std::endl;
             movimiento = -0.5f;
 
         }
         else if(paloPos.getPrimera().x<=42.5 && dir == true)
         {
-            //printf("2\n");
-            //std::cout<<"DIR: "<<dir<<std::endl;
             movimiento = 0.5f;
             dir=false;
         }
@@ -54,15 +49,11 @@ void Palo::Update(float timeElapsed, int estado)
     {
         if(paloPos.getPrimera().x>42.5  && dir == true)
         {
-            //printf("1\n");
-            //std::cout<<"DIR: "<<dir<<std::endl;
             movimiento = -1.f;
 
         }
         else if(paloPos.getPrimera().x<=42.5 && dir == true)
         {
-            printf("ESTOY AQUI\n");
-            //tiroBola();
             dir=false;
             terminado=true;
             calculoVelocidad();
@@ -73,13 +64,8 @@ void Palo::Update(float timeElapsed, int estado)
     }
     else if(estado == 2 && cont<700)
     {
-        //std::cout<<"Cont: "<<cont<<std::endl;
         cont+=timeElapsed;
     }
-    //printf("----\n");
-
-
-
 
     paloPos.setPrimera(paloPos.getSegunda());
 
@@ -93,14 +79,8 @@ void Palo::Update(float timeElapsed, int estado)
     {
         pos=670;
     }
-    //std::cout<<"POS "<<pos<<std::endl;
 
     paloPos.setSegunda(sf::Vector2f(pos,paloPos.getPrimera().y));
-
-    //posicion.setPrimera(posicion.getSegunda());
-
-    //posicion.setSegunda(sf::Vector2f(posicion.getPrimera().x+velocidad.x*timeElapsed,posicion.getPrimera().y + velocidad.y*timeElapsed));
-
 
 }
 
@@ -114,14 +94,14 @@ void Palo::Render(sf::RenderWindow& window, float percentTick)
 void Palo::tiroBola()
 {
     dir = true;
-    terminado=false;
+    //terminado=false;
     cont = 0;
     posPulsado = palo.getPosition().x;
-    //paloPos.setSegunda(palo.getPosition());
-
-
 }
-
+/*
+    Normalizo la posicion actual del palo para obtener un valor de
+    velocidad entre 0.1 y 0.4
+*/
 void Palo::calculoVelocidad(){
     float posNorm = 0;
             if(palo.getPosition().x<42.5)
@@ -136,11 +116,10 @@ void Palo::calculoVelocidad(){
             {
                 posNorm =posPulsado;
             }
-            std::cout<<"POS TIRO "<<posNorm<<std::endl;
+
             posNorm = (posNorm-42.5)/627.5;
             float vel = (0.3*posNorm) + 0.1;
-            std::cout<<"POS TIRO "<<posNorm<<std::endl;
-            std::cout<<"VEL TIRO "<<vel<<std::endl;
+
             posPulsado = 0;
             Juego::Instance()->tiraBola(vel);
 }

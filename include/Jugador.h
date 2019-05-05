@@ -1,9 +1,11 @@
 #ifndef JUGADOR_H
 #define JUGADOR_H
 #include <SFML/Graphics.hpp>
-#include <posInterpolacion.h>
+#include <math.h>
 #include <iostream>
+#include <posInterpolacion.h>
 #include <Juego.h>
+#include <Mapa.h>
 
 class Jugador
 {
@@ -11,6 +13,8 @@ class Jugador
     static Jugador*     Instance();
         virtual         ~Jugador();
         void            Render(sf::RenderWindow&,float);
+        void            RenderPoints(sf::RenderWindow& window);
+
         void            Update(float);
         void            setPointer(sf::Texture&);
         void            apuntado(sf::Vector2f,sf::Vector2f);
@@ -28,6 +32,8 @@ class Jugador
             sf::Sprite          pointer;
             posInterpolacion    posicion;
             int                 puntuacion;
+            sf::Font            fuente;
+            sf::Text            textoPuntos;
 
             Jugador();
 };

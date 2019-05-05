@@ -8,6 +8,7 @@ class Bola
 {
     public:
         Bola(int,sf::Texture&,std::vector<sf::Vector2f>);
+        Bola();
         virtual ~Bola();
         void        Render(sf::RenderWindow&,float);
         void        Update(float);
@@ -15,6 +16,7 @@ class Bola
         void        empezarAnimacion(float);
         void        terminarAnimacion();
 
+        void            calcDistancia(sf::Vector2f);
         sf::Vector2f    getSprite();
         sf::Vector2f    getPosPr();
         sf::Vector2f    getPosSg();
@@ -28,6 +30,7 @@ class Bola
         void            setCaida(bool);
         bool            getCaida();
         sf::FloatRect   getGlobalBounds();
+        float           getDist();
 
     protected:
     private:
@@ -36,8 +39,10 @@ class Bola
     posInterpolacion    posicion;
     sf::Sprite          sprite;
     bool                animado;
-    float               posfinal;
     bool                caida;
+    float               posfinal;
+
+    float               dist;
 
     void   controlaVelocidad();
 };
