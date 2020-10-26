@@ -1,41 +1,41 @@
-#ifndef JUGADOR_H
-#define JUGADOR_H
-#include <SFML/Graphics.hpp>
-#include <math.h>
-#include <iostream>
-#include <posInterpolacion.h>
+#pragma once
 #include <Juego.h>
-#include <Mapa.h>
+//#include <Mapa.h>
+#include <SFML/Graphics.hpp>
+#include <iostream>
+#include <math.h>
 
 class Jugador
 {
-    public:
-    static Jugador*     Instance();
-        virtual         ~Jugador();
-        void            Render(sf::RenderWindow&,float);
-        void            RenderPoints(sf::RenderWindow& window);
+public:
+	static Jugador* Instance();
+	virtual ~Jugador();
+	void Render(sf::RenderWindow&, float);
+	//void RenderPoints(sf::RenderWindow& ventana);
 
-        void            Update(float);
-        void            setPointer(sf::Texture&);
-        void            apuntado(sf::Vector2f,sf::Vector2f);
-        void            addPuntuacion(int);
+	void Update(float);
+	void setPointer(sf::Texture&);
+	//void apuntado(sf::Vector2f, sf::Vector2f);
 
-        sf::Vector2f    getPosition();
-        int             getPuntuacion();
-        void            setPuntuacion(int);
+	sf::Vector2f getPos();
+	sf::Vector2f getCurrentPos();
+	int getPuntuacion();
+	void addPuntuacion(int);
 
+	//void setPuntuacion(int);
 
-    protected:
-    private:
-    static Jugador*             instancia;
-            sf::Texture         textura;
-            sf::Sprite          pointer;
-            posInterpolacion    posicion;
-            int                 puntuacion;
-            sf::Font            fuente;
-            sf::Text            textoPuntos;
+	sf::Vector2f movimiento;
 
-            Jugador();
+protected:
+private:
+	static Jugador* instancia;
+	sf::Texture textura;
+	sf::Sprite pointer;
+	std::pair<sf::Vector2f, sf::Vector2f> posInitFin;
+
+	int puntuacion;
+	//sf::Font fuente;
+	//sf::Text textoPuntos;
+
+	Jugador();
 };
-
-#endif // JUGADOR_H

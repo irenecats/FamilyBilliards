@@ -70,7 +70,10 @@ void EstadoApuntar::Render(float percentick)
 	Juego* juego = Juego::Instance();
 	for (unsigned int i = 0; i < juego->bolas.size(); i++)
 	{
-		juego->bolas[i].Render(juego->ventana, percentick);
+		if (!juego->bolas[i].caida)
+		{
+			juego->bolas[i].Render(juego->ventana, percentick);
+		}
 	}
 
 	for (unsigned int i = 0; i < juego->barra.size(); i++)
@@ -79,5 +82,9 @@ void EstadoApuntar::Render(float percentick)
 	}
 	juego->palo.Render(juego->ventana, percentick);
 
+	for (unsigned int i = 0; i < juego->abaco.size(); i++)
+	{
+		juego->abaco[i].Render(juego->ventana, percentick);
+	}
 	Jugador::Instance()->Render(juego->ventana, percentick);
 }

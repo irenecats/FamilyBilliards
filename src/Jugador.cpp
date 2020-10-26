@@ -20,45 +20,9 @@ Jugador* Jugador::Instance()
 */
 void Jugador::Update(float timeElapsed)
 {
-	sf::Vector2f movimiento(0.f, 0.f);
-	float vel = 0;
-	bool meMuevo = true;
-	if (Juego::Instance()->getEstado() != 0)
-	{
-		meMuevo = false;
-	}
-	if (meMuevo)
-	{
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::LShift) || sf::Keyboard::isKeyPressed(sf::Keyboard::RShift))
-		{
-			vel = 0.2f;
-		}
-		else
-		{
-			vel = 0.06f;
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up))
-		{
-			movimiento.y = -vel;
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down))
-		{
-			movimiento.y = vel;
-		}
+	posInitFin.first = posInitFin.second;
 
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Left))
-		{
-			movimiento.x = -vel;
-		}
-		if (sf::Keyboard::isKeyPressed(sf::Keyboard::Right))
-		{
-			movimiento.x = vel;
-		}
-	}
-
-	posicion.setPrimera(posicion.getSegunda());
-
-	sf::Vector2f pos2(posicion.getPrimera().x + movimiento.x * timeElapsed, posicion.getPrimera().y + movimiento.y * timeElapsed);
+	sf::Vector2f pos2(posInitFin.first.x + movimiento.x * timeElapsed, posInitFin.first.y + movimiento.y * timeElapsed);
 	if (pos2.x < 45)
 	{
 		pos2.x = 45;
@@ -78,24 +42,22 @@ void Jugador::Update(float timeElapsed)
 	}
 
 	//std::cout<<"POS "<<pos<<std::endl;
-
-	posicion.setSegunda(pos2);
+	posInitFin.second = pos2;
 }
 
-void Jugador::Render(sf::RenderWindow& window, float percentTick)
+void Jugador::Render(sf::RenderWindow& ventana, float percentTick)
 {
-
-	float pointerX = posicion.getPrimera().x * (1 - percentTick) + posicion.getSegunda().x * percentTick;
-	float pointerY = posicion.getPrimera().y * (1 - percentTick) + posicion.getSegunda().y * percentTick;
+	float pointerX = posInitFin.first.x * (1 - percentTick) + posInitFin.second.x * percentTick;
+	float pointerY = posInitFin.first.y * (1 - percentTick) + posInitFin.second.y * percentTick;
 	pointer.setPosition(pointerX, pointerY);
-	window.draw(pointer);
+	ventana.draw(pointer);
 }
-
-void Jugador::RenderPoints(sf::RenderWindow& window)
+/*
+void Jugador::RenderPoints(sf::RenderWindow& ventana)
 {
-	window.draw(textoPuntos);
+	ventana.draw(textoPuntos);
 }
-
+*/
 void Jugador::setPointer(sf::Texture& text)
 {
 
@@ -105,8 +67,9 @@ void Jugador::setPointer(sf::Texture& text)
 	pointer.setOrigin(20 / 2, 10);
 	sf::Vector2f pos(399.0, 190.0);
 	pointer.setPosition(pos.x, pos.y);
-	posicion.setPrimera(pos);
-	posicion.setSegunda(pos);
+	posInitFin.first = pos;
+	posInitFin.second = pos;
+	/*
 	puntuacion = 0;
 
 	if (!fuente.loadFromFile("resources/VCR_OSD_MONO.ttf"))
@@ -120,12 +83,14 @@ void Jugador::setPointer(sf::Texture& text)
 	textoPuntos.setCharacterSize(20);
 	textoPuntos.setString("Pts. " + std::to_string(puntuacion));
 	textoPuntos.setPosition(100, 550);
+	*/
 }
 
 /*
     Calculo el vector unitario entre la bola blanca y el puntero y lo multiplico
     por la distancia de separacion que he visto correspondiente
 */
+/*
 void Jugador::apuntado(sf::Vector2f blanca, sf::Vector2f menor)
 {
 	sf::Vector2f vect(menor.x - blanca.x, menor.y - blanca.y);
@@ -141,29 +106,33 @@ void Jugador::apuntado(sf::Vector2f blanca, sf::Vector2f menor)
 
 	Mapa::Instance()->setAngulo((float)atan2(vect.y, vect.x));
 }
-
+*/
 void Jugador::addPuntuacion(int puntos)
 {
 	std::cout << "TENGO MAS PUNTOS " << puntos << std::endl;
 	puntuacion += puntos;
 	std::cout << "Totales " << puntuacion << std::endl;
-	textoPuntos.setString("Pts. " + std::to_string(puntuacion));
-}
-
-sf::Vector2f Jugador::getPosition()
-{
-	return posicion.getSegunda();
+	//textoPuntos.setString("Pts. " + std::to_string(puntuacion));
 }
 
 int Jugador::getPuntuacion()
 {
 	return puntuacion;
 }
-
+/*
 void Jugador::setPuntuacion(int val)
 {
 	puntuacion = val;
 	textoPuntos.setString("Pts. " + std::to_string(puntuacion));
+}
+*/
+sf::Vector2f Jugador::getPos()
+{
+	return posInitFin.second;
+}
+sf::Vector2f Jugador::getCurrentPos()
+{
+	return pointer.getPosition();
 }
 
 Jugador::Jugador()

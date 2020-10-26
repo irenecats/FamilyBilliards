@@ -19,6 +19,8 @@ public:
 		return &instancia;
 	}
 
+	void addCaidas(std::vector<Bola*> bolas);
+
 protected:
 	EstadoMovBolas() {};
 	void tiraBola(sf::Vector2f player, sf::Vector2f bola, float vel);
@@ -26,7 +28,7 @@ protected:
 	void colisionParedes();
 	void colisionTronera();
 	void colisionBolas();
-	void choque(Bola& bola1, Bola& bola2);
+	void choque(Bola* bola1, Bola* bola2);
 	bool comprobarParadas();
 
 private:

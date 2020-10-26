@@ -1,5 +1,5 @@
 #include <Bola.h>
-#include <EstadoApuntar.h>
+#include <EstadoAnimacionBolas.h>
 #include <EstadoMovBolas.h>
 #include <Juego.h>
 #include <iostream>
@@ -56,10 +56,10 @@ void EstadoMovBolas::Update(float timeElapsed)
 	Juego::Instance()->palo.Update(timeElapsed, 0.f);
 	colisionBolas();
 	colisionParedes();
-	//colisionTronera();
+	colisionTronera();
 	if (comprobarParadas())
 	{
-		Juego::Instance()->CambiarEstado(EstadoApuntar::Instancia());
+		Juego::Instance()->CambiarEstado(EstadoAnimacionBolas::Instancia());
 	} //si están paradas cambio de estado -> sin
 }
 void EstadoMovBolas::Render(float percentick)
@@ -67,7 +67,10 @@ void EstadoMovBolas::Render(float percentick)
 	Juego* juego = Juego::Instance();
 	for (unsigned int i = 0; i < juego->bolas.size(); i++)
 	{
-		juego->bolas[i].Render(juego->ventana, percentick);
+		if (!juego->bolas[i].caida)
+		{
+			juego->bolas[i].Render(juego->ventana, percentick);
+		}
 	}
 
 	for (unsigned int i = 0; i < juego->barra.size(); i++)
@@ -167,14 +170,17 @@ void EstadoMovBolas::colisionTronera()
 
 				if (separacion <= (tronera->getRadius() + 9))
 				{
-					printf("ha caido\n");
+					std::cout << "Ha caido " << bola->getID() << std::endl;
 					bola->setVelocidad(sf::Vector2f(0, 0));
 					bola->caida = true;
+					bola->setPosPR(sf::Vector2f(590, 400));
+					bola->setPosSg(sf::Vector2f(590, 400));
 					caidas.push_back(bola);
 				}
 			}
 		}
 	}
+	EstadoAnimacionBolas::Instancia()->addCaidas(caidas);
 }
 
 void EstadoMovBolas::colisionBolas()
@@ -184,12 +190,15 @@ void EstadoMovBolas::colisionBolas()
 	for (unsigned int i = 0; i < Juego::Instance()->bolas.size(); i++)
 	{
 		bola1 = &Juego::Instance()->bolas[i];
-		for (unsigned int j = 0; j < Juego::Instance()->bolas.size() && !bola1->caida; j++)
+		if (!bola1->caida)
 		{
-			bola2 = &Juego::Instance()->bolas[j];
-			if (!bola1->caida && i != j)
+			for (unsigned int j = 0; j < Juego::Instance()->bolas.size(); j++)
 			{
-				choque(*bola1, *bola2);
+				bola2 = &Juego::Instance()->bolas[j];
+				if (!bola2->caida && i != j)
+				{
+					choque(bola1, bola2);
+				}
 			}
 		}
 	}
@@ -200,20 +209,28 @@ void EstadoMovBolas::colisionBolas()
     2 radios significa que estan colisionando. En caso de colision, muevo manualmente las bolas
     para que no se solapen y calculo los nuevos vectores de velocidad.
 */
-void EstadoMovBolas::choque(Bola& bola1, Bola& bola2)
+void EstadoMovBolas::choque(Bola* bola1, Bola* bola2)
 {
-	sf::Vector2f posB1 = bola1.getPosSecond();
-	sf::Vector2f posB2 = bola2.getPosSecond();
+	sf::Vector2f posB1 = bola1->getPosSecond();
+	sf::Vector2f posB2 = bola2->getPosSecond();
 	sf::Vector2f vecB1B2((posB1.x - posB2.x), (posB1.y - posB2.y));
 
 	float separacion = sqrt((vecB1B2.x * vecB1B2.x) + (vecB1B2.y * vecB1B2.y));
 
 	if (separacion < 21)
 	{
-		if (bola1.getID() == 0 && !primera)
+		if (bola1->getID() == 0)
 		{
-			std::cout << "Primera bola: " << bola2.getID() << std::endl;
-			primera = &bola2;
+			if (!primera)
+			{
+				primera = bola2;
+				EstadoAnimacionBolas::Instancia()->primera = bola2->getID();
+				std::cout << "\nPrimera bola: " << bola2->getID() << std::endl;
+			}
+			else
+			{
+				std::cout << "Golpe con " << bola2->getID() << std::endl;
+			}
 		}
 
 		float interseccion = (separacion - 21) * 0.5;
@@ -222,18 +239,20 @@ void EstadoMovBolas::choque(Bola& bola1, Bola& bola2)
 		posB2.x += (interseccion * vecB1B2.x) / separacion;
 		posB2.y += (interseccion * vecB1B2.y) / separacion;
 
-		bola1.setPosSg(posB1);
-		bola2.setPosSg(posB2);
+		bola1->setPosSg(posB1);
+		bola2->setPosSg(posB2);
 
 		//normal
 		sf::Vector2f normal = sf::Vector2f((posB2.x - posB1.x), (posB2.y - posB1.y)) / separacion;
 
-		sf::Vector2f b1vel = bola1.getVelocidad();
-		sf::Vector2f b2vel = bola2.getVelocidad();
+		sf::Vector2f b1vel = bola1->getVelocidad();
+		sf::Vector2f b2vel = bola2->getVelocidad();
 
 		float p = 2 * (normal.x * (b1vel.x - b2vel.x) + normal.y * (b1vel.y - b2vel.y)) / 2;
 
-		bola1.setVelocidad(sf::Vector2f(b1vel.x - p * 0.5f * normal.x, b1vel.y - p * 0.5f * normal.y));
-		bola2.setVelocidad(sf::Vector2f(b2vel.x + p * 0.5f * normal.x, b2vel.y + p * 0.5f * normal.y));
+		//bola1.setVelocidad(sf::Vector2f(b1vel.x - p * 0.75f * normal.x, b1vel.y - p * 0.75f * normal.y));
+		//bola2.setVelocidad(sf::Vector2f(b2vel.x + p * 0.75f * normal.x, b2vel.y + p * 0.75f * normal.y));
+		bola1->setVelocidad(sf::Vector2f(b1vel.x - p * 0.9f * normal.x, b1vel.y - p * 0.9f * normal.y));
+		bola2->setVelocidad(sf::Vector2f(b2vel.x + p * 0.9f * normal.x, b2vel.y + p * 0.9f * normal.y));
 	}
 }

@@ -1,67 +1,64 @@
-#ifndef JUEGO_H
-#define JUEGO_H
-#include <stdio.h>
-#include <SFML/Graphics.hpp>
-#include <algorithm>
-#include <math.h>
-#include <Bola.h>
-#include <Jugador.h>
-#include <Palo.h>
-#include <Abaco.h>
-#include <Mapa.h>
+#pragma once
 
-#define UPDATE_TIME (1000/60)
+#include <Abaco.h>
+#include <Bola.h>
+#include <Estado.h>
+#include <Jugador.h>
+//#include <Mapa.h>
+#include <Palo.h>
+#include <SFML/Graphics.hpp>
+#include <stdio.h>
+
+#define UPDATE_TIME (1000 / 60)
 
 class Juego
 {
-    public:
-        static Juego*   Instance();
-        virtual         ~Juego();
-        void            bucleJuego();
-        int             getEstado();
-        void            tiraBola(float);
+public:
+	//Variables
+	sf::RenderWindow ventana;
+	sf::Texture textura;
+	std::vector<sf::Vector2f> positions; //posiciones iniciales al generar las bolas
 
-    protected:
-    private:
-        //Variables
-       static Juego*                    instancia;
-       sf::Texture                      textura;
-       sf::Clock                        relojUpdate;
-       bool                             debug;
-       std::vector<sf::Vector2f>        positions;
-       int                              estado; //0 apuntado, 1 tirando, 2 bolas en movimiento, 3 abaco
-       std::vector<sf::CircleShape>     troneras;
-       std::vector<sf::RectangleShape>  paredes;
+	std::vector<Bola> bolas;   //bolas en juego
+	std::vector<Bola> barra;   //bolas en la barra
+	std::vector<Bola*> caidas; //bolas que acaban de caer
+	Palo palo;				   //palo de billar
+	//Abaco abaco;			   //puntos actuales
+	std::vector<Abaco> abaco;
 
+	std::vector<sf::RectangleShape> paredes; //colliders de las paredes
+	std::vector<sf::CircleShape> troneras;	 //colliders de las troneras
 
-     //  float                velTiro;
+	static Juego* Instance();
+	virtual ~Juego();
+	void bucleJuego();
 
-       Bola*                primera;
-       std::vector<Bola>    bolas;
-       std::vector<Bola>    barra;
-       std::vector<Bola*>   caidas;
-       unsigned int                  caidasAux;
-       int                  caidasCont;
+	//Estados
+	void CambiarEstado(Estado* estado);
 
-       Abaco                abaco;
-       int                  puntos;
+	//Juego
+	void tiraBola(float);
 
+protected:
+private:
+	//Variables
+	static Juego* instancia;
 
-        //Metodos
-        Juego();
-        void    colisionBolas();
-        void    colisionParedes();
-        void    colisionTronera();
+	sf::View pantalla;
+	sf::View mapa;
+	sf::Clock relojUpdate;
 
-        void    choque(Bola& , Bola& );
-        void    generaBolas();
-        bool    bolasParadas();
+	bool debug;
 
-        bool    posValida(sf::Vector2f);
-        void    manejaAnimaciones();
+	std::vector<Estado*> estados;
 
-        void    Inicializa();
-        void    Reinicia();
+	int caidasCont;
+
+	//Metodos
+	Juego();
+	void prepararVentana();
+	void generaBolas();
+
+	void Inicializa();
+	//	void Reinicia();
 };
-
-#endif // JUEGO_H

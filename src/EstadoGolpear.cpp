@@ -55,7 +55,7 @@ void EstadoGolpear::tiraBola(sf::Vector2f player, sf::Vector2f bola, float vel)
 float EstadoGolpear::calcVel(sf::Vector2f posicion)
 {
 	float posNorm = (posicion.x - 42.5) / 627.5;
-	float vel = (0.3 * posNorm) + 0.1;
+	float vel = (0.4 * posNorm) + 0.1;
 	return vel;
 }
 void EstadoGolpear::Update(float timeElapsed)
@@ -87,7 +87,10 @@ void EstadoGolpear::Render(float percentick)
 	Juego* juego = Juego::Instance();
 	for (unsigned int i = 0; i < juego->bolas.size(); i++)
 	{
-		juego->bolas[i].Render(juego->ventana, percentick);
+		if (!juego->bolas[i].caida)
+		{
+			juego->bolas[i].Render(juego->ventana, percentick);
+		}
 	}
 
 	for (unsigned int i = 0; i < juego->barra.size(); i++)

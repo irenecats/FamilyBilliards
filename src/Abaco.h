@@ -1,32 +1,33 @@
-#ifndef ABACO_H
-#define ABACO_H
+#pragma once
 
-#include <iostream>
 #include <SFML/Graphics.hpp>
-#include <posInterpolacion.h>
+#include <iostream>
 
 class Abaco
 {
-    public:
-        Abaco();
-        virtual ~Abaco();
-        void Update(float);
-        void Render(sf::RenderWindow& window,float);
-        void muevePiezas(int);
-        int  getAnimando();
-        void setAnimando(int);
-        void getPos();
+public:
+	Abaco();
+	virtual ~Abaco();
+	void Update(float);
+	void Render(sf::RenderWindow& ventana, float);
+	void muevePiezas(int);
+	int getAnimando();
+	void setAnimando(int);
+	sf::Vector2f getPos();
 
-    protected:
-    private:
+	void setPosPR(sf::Vector2f);
+	void setPosSg(sf::Vector2f);
+	sf::RectangleShape sprite;
 
-        sf::Vector2f     velocidad;
-        int              moviendo;
-        int              movidas;
-        int             animando;
-        posInterpolacion posicion;
-        sf::RectangleShape rect;
-        std::vector<sf::RectangleShape> piezas;
+protected:
+private:
+	//std::pair<sf::RectangleShape, std::pair<sf::Vector2f, sf::Vector2f>> ha;
+	std::pair<sf::Vector2f, sf::Vector2f> posInitFin;
+	//viejo
+
+	std::vector<sf::RectangleShape> piezas;
+	sf::Vector2f velocidad;
+	int moviendo;
+	int movidas;
+	int animando;
 };
-
-#endif // ABACO_H
