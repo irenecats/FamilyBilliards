@@ -85,18 +85,6 @@ void EstadoGolpear::Update(float timeElapsed)
 void EstadoGolpear::Render(float percentick)
 {
 	Juego* juego = Juego::Instance();
-	for (unsigned int i = 0; i < juego->bolas.size(); i++)
-	{
-		if (!juego->bolas[i].caida)
-		{
-			juego->bolas[i].Render(juego->ventana, percentick);
-		}
-	}
-
-	for (unsigned int i = 0; i < juego->barra.size(); i++)
-	{
-		juego->barra[i].Render(juego->ventana, percentick);
-	}
 
 	juego->palo.Render(juego->ventana, percentick);
 

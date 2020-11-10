@@ -5,6 +5,12 @@
 EstadoAnimacionAbaco EstadoAnimacionAbaco::instancia;
 void EstadoAnimacionAbaco::Inicializar()
 {
+	printf("Empiezo (solo debería pasar 1 vez\n");
+	std::cout << "Muevo " << nuevosPuntos << " piezas" << std::endl;
+
+	animando = true;
+	puntosActuales = Jugador::Instance()->getPuntuacion();
+	posFin = (100 + (puntosActuales)*10);
 }
 void EstadoAnimacionAbaco::Limpiar()
 {
@@ -26,56 +32,40 @@ void EstadoAnimacionAbaco::ManejarEventos(sf::Event event)
 
 void EstadoAnimacionAbaco::Update(float timeElapsed)
 {
-	int a = 0;
-	a = timeElapsed + a;
-	//TODO: ponerlo en el init
-	if (!animando)
+	if (posFin < piezas[puntosActuales]->getPos().x)
 	{
-		animando = true;
-		puntosActuales = Jugador::Instance()->getPuntuacion();
-		//float posX = (piezas[puntosActuales]->getPos().x) + (i * 10);
+		setVelGrupo(puntosActuales, nuevosPuntos, -0.1f);
 	}
-
-	//posicion.setSegunda(sf::Vector2f(100 + (10 * (puntosActuales -1), posicion.getPrimera().y));
-
-	//Abaco* abaco = &Juego::Instance()->abaco;
-	//abaco->Update(timeElapsed);
-
-	//if (posicion.getSegunda().x < 100)
-	//{
-	//	velocidad.x = 0;
-	//	posicion.setSegunda(sf::Vector2f(100 + (10 * (movidas)-1), posicion.getPrimera().y));
-	//	movidas += moviendo;
-	//	moviendo = 0;
-	//	animando = 1;
-	//}
-	//else
-	//{
-	//	velocidad.x = -0.1;
-	//}
-
-	//if (abaco->getAnimando())
-	//{
-	//	abaco->setAnimando(false);
-	//	printf("Las piezas estan en su sitio\n");
-	//	Juego::Instance()->CambiarEstado(EstadoApuntar::Instancia());
-	//}
+	else
+	{
+		printf("Han llegado a su sitio\n");
+		setVelGrupo(puntosActuales, nuevosPuntos, 0.f);
+		Jugador::Instance()->addPuntuacion(nuevosPuntos);
+		if (ganado)
+		{
+			Juego::Instance()->CambiarEstado(EstadoApuntar::Instancia());
+		}
+		else
+		{
+			Juego::Instance()->CambiarEstado(EstadoApuntar::Instancia());
+		}
+	}
+	for (int i = puntosActuales; i < (puntosActuales + nuevosPuntos); i++)
+	{
+		piezas[i]->Update(timeElapsed);
+	}
+}
+void EstadoAnimacionAbaco::setVelGrupo(int inicio, int fin, float vel)
+{
+	for (int i = inicio; i < fin; i++)
+	{
+		piezas[i]->setVelocidad(vel);
+	}
 }
 
 void EstadoAnimacionAbaco::Render(float percentick)
 {
 	Juego* juego = Juego::Instance();
-	for (unsigned int i = 0; i < juego->bolas.size(); i++)
-	{
-		if (!juego->bolas[i].caida)
-		{
-			juego->bolas[i].Render(juego->ventana, percentick);
-		}
-	}
 
-	for (unsigned int i = 0; i < juego->barra.size(); i++)
-	{
-		juego->barra[i].Render(juego->ventana, 0);
-	}
 	juego->palo.Render(juego->ventana, percentick);
 }

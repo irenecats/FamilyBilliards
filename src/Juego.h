@@ -7,7 +7,6 @@
 //#include <Mapa.h>
 #include <Palo.h>
 #include <SFML/Graphics.hpp>
-#include <stdio.h>
 
 #define UPDATE_TIME (1000 / 60)
 
@@ -31,12 +30,9 @@ public:
 
 	static Juego* Instance();
 	virtual ~Juego();
+
 	void bucleJuego();
-
-	//Estados
 	void CambiarEstado(Estado* estado);
-
-	//Juego
 	void tiraBola(float);
 
 protected:
@@ -48,13 +44,8 @@ private:
 	sf::View mapa;
 	sf::Clock relojUpdate;
 
-	bool debug;
-
 	std::vector<Estado*> estados;
 
-	int caidasCont;
-
-	//Metodos
 	Juego();
 	void prepararVentana();
 	void generaBolas();

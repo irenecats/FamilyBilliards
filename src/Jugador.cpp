@@ -41,7 +41,6 @@ void Jugador::Update(float timeElapsed)
 		pos2.y = 346;
 	}
 
-	//std::cout<<"POS "<<pos<<std::endl;
 	posInitFin.second = pos2;
 }
 
@@ -52,12 +51,12 @@ void Jugador::Render(sf::RenderWindow& ventana, float percentTick)
 	pointer.setPosition(pointerX, pointerY);
 	ventana.draw(pointer);
 }
-/*
+
 void Jugador::RenderPoints(sf::RenderWindow& ventana)
 {
 	ventana.draw(textoPuntos);
 }
-*/
+
 void Jugador::setPointer(sf::Texture& text)
 {
 
@@ -69,7 +68,7 @@ void Jugador::setPointer(sf::Texture& text)
 	pointer.setPosition(pos.x, pos.y);
 	posInitFin.first = pos;
 	posInitFin.second = pos;
-	/*
+
 	puntuacion = 0;
 
 	if (!fuente.loadFromFile("resources/VCR_OSD_MONO.ttf"))
@@ -83,14 +82,13 @@ void Jugador::setPointer(sf::Texture& text)
 	textoPuntos.setCharacterSize(20);
 	textoPuntos.setString("Pts. " + std::to_string(puntuacion));
 	textoPuntos.setPosition(100, 550);
-	*/
 }
 
 /*
     Calculo el vector unitario entre la bola blanca y el puntero y lo multiplico
     por la distancia de separacion que he visto correspondiente
 */
-/*
+
 void Jugador::apuntado(sf::Vector2f blanca, sf::Vector2f menor)
 {
 	sf::Vector2f vect(menor.x - blanca.x, menor.y - blanca.y);
@@ -101,31 +99,23 @@ void Jugador::apuntado(sf::Vector2f blanca, sf::Vector2f menor)
 	vect = vect / mod;
 	vect *= 50.f;
 
-	posicion.setPrimera(sf::Vector2f(blanca.x + vect.x, blanca.y + vect.y));
-	posicion.setSegunda(sf::Vector2f(blanca.x + vect.x, blanca.y + vect.y));
-
-	Mapa::Instance()->setAngulo((float)atan2(vect.y, vect.x));
+	posInitFin.first = sf::Vector2f(blanca.x + vect.x, blanca.y + vect.y);
+	posInitFin.second = sf::Vector2f(blanca.x + vect.x, blanca.y + vect.y);
 }
-*/
+
 void Jugador::addPuntuacion(int puntos)
 {
 	std::cout << "TENGO MAS PUNTOS " << puntos << std::endl;
 	puntuacion += puntos;
 	std::cout << "Totales " << puntuacion << std::endl;
-	//textoPuntos.setString("Pts. " + std::to_string(puntuacion));
+	textoPuntos.setString("Pts. " + std::to_string(puntuacion));
 }
 
 int Jugador::getPuntuacion()
 {
 	return puntuacion;
 }
-/*
-void Jugador::setPuntuacion(int val)
-{
-	puntuacion = val;
-	textoPuntos.setString("Pts. " + std::to_string(puntuacion));
-}
-*/
+
 sf::Vector2f Jugador::getPos()
 {
 	return posInitFin.second;

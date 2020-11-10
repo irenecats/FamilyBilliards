@@ -65,18 +65,6 @@ void EstadoMovBolas::Update(float timeElapsed)
 void EstadoMovBolas::Render(float percentick)
 {
 	Juego* juego = Juego::Instance();
-	for (unsigned int i = 0; i < juego->bolas.size(); i++)
-	{
-		if (!juego->bolas[i].caida)
-		{
-			juego->bolas[i].Render(juego->ventana, percentick);
-		}
-	}
-
-	for (unsigned int i = 0; i < juego->barra.size(); i++)
-	{
-		juego->barra[i].Render(juego->ventana, percentick);
-	}
 	juego->palo.Render(juego->ventana, percentick);
 }
 
@@ -168,7 +156,7 @@ void EstadoMovBolas::colisionTronera()
 
 				float separacion = sqrt((vecB1B2.x * vecB1B2.x) + (vecB1B2.y * vecB1B2.y));
 
-				if (separacion <= (tronera->getRadius() + 9))
+				if (separacion <= (tronera->getRadius() + 5))
 				{
 					std::cout << "Ha caido " << bola->getID() << std::endl;
 					bola->setVelocidad(sf::Vector2f(0, 0));
@@ -226,10 +214,6 @@ void EstadoMovBolas::choque(Bola* bola1, Bola* bola2)
 				primera = bola2;
 				EstadoAnimacionBolas::Instancia()->primera = bola2->getID();
 				std::cout << "\nPrimera bola: " << bola2->getID() << std::endl;
-			}
-			else
-			{
-				std::cout << "Golpe con " << bola2->getID() << std::endl;
 			}
 		}
 

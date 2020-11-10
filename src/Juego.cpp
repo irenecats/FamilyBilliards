@@ -1,8 +1,7 @@
 #include "Juego.h"
 #include "Platform/Platform.hpp"
 #include <EstadoAnimacionAbaco.h>
-#include <algorithm>
-#include <math.h>
+
 Juego* Juego::instancia = 0;
 Juego* Juego::Instance()
 {
@@ -86,6 +85,23 @@ void Juego::bucleJuego()
 		ventana.draw(fondo);
 
 		estados.back()->Render(percentick);
+		for (unsigned int i = 0; i < bolas.size(); i++)
+		{
+			if (!bolas[i].caida)
+			{
+				bolas[i].Render(ventana, percentick);
+			}
+		}
+
+		for (unsigned int i = 0; i < barra.size(); i++)
+		{
+			barra[i].Render(ventana, percentick);
+		}
+
+		for (unsigned int i = 0; i < abaco.size(); i++)
+		{
+			abaco[i].Render(ventana, percentick);
+		}
 
 		// Update the window
 		ventana.display();
@@ -106,6 +122,7 @@ void Juego::generaBolas()
 
 void Juego::CambiarEstado(Estado* estado)
 {
+	estados.back()->Inicializar();
 	estados.push_back(estado);
 }
 
@@ -172,7 +189,6 @@ void Juego::Inicializa()
 
 	generaBolas();
 	Jugador::Instance()->setPointer(textura);
-	debug = false;
 	//Mapa::Instance()->setValues();
 
 	//TODO: cambiar por 45?
@@ -199,7 +215,10 @@ void Juego::Inicializa()
 		}
 		pieza.sprite = sprite;
 		abaco.push_back(pieza);
-		EstadoAnimacionAbaco::Instancia()->piezas.push_back(&abaco.back());
+	}
+	for (size_t i = 0; i < 50; i++)
+	{
+		EstadoAnimacionAbaco::Instancia()->piezas.push_back(&abaco[i]);
 	}
 }
 
