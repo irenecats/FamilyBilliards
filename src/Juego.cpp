@@ -1,5 +1,4 @@
-#include "Juego.h"
-#include "Platform/Platform.hpp"
+#include <Juego.h>
 #include <EstadoAnimacionAbaco.h>
 
 Juego* Juego::instancia = 0;
@@ -25,28 +24,37 @@ void Juego::prepararVentana()
 	printf("---------\n");
 	printf("Estado 0: Apunto");
 
-	util::Platform platform;
-
-	// in Windows at least, this must be called before creating the ventana
-	float screenScalingFactor = platform.getScreenScalingFactor(ventana.getSystemHandle());
-
-	ventana.create(sf::VideoMode(800.0f * screenScalingFactor, 600.0f * screenScalingFactor), "Family Billiards");
-	ventana.setFramerateLimit(60);
-	ventana.setKeyRepeatEnabled(false);
-	platform.setIcon(ventana.getSystemHandle());
-
 	pantalla = sf::View(sf::FloatRect(0, 0, 800.f, 600.f));
-	mapa = sf::View(sf::FloatRect(0, 0, 200, 60));
-	mapa.setViewport(sf::FloatRect(0.25, 0.75, 0.5, 0.20));
+    //sf::View mapa(sf::FloatRect(0,0,200,60));
+    //mapa.setViewport(sf::FloatRect(0.25, 0.75, 0.5, 0.20));
+		//TODO: ponerlo en la textura con todo lo demás y sacarlo de ahi?
+
+
+	ventana.create(sf::VideoMode(800, 600), "Family Billiards");
+    ventana.setFramerateLimit(60);
+	ventana.setKeyRepeatEnabled(false);
+
+		icon.loadFromFile("resources/sfml-icon-big.png");
+        ventana.setIcon(1024,1024,icon.getPixelsPtr());
+
+	//util::Platform platform;
+	// in Windows at least, this must be called before creating the ventana
+	//float screenScalingFactor = platform.getScreenScalingFactor(ventana.getSystemHandle());
+	//ventana.create(sf::VideoMode(800.0f * screenScalingFactor, 600.0f * screenScalingFactor), "Family Billiards");
+	//platform.setIcon(ventana.getSystemHandle());
 }
 void Juego::bucleJuego()
 {
 	prepararVentana();
 
+    sf::CircleShape shape(300.f);
+    shape.setFillColor(sf::Color::Green);
+
 	//Inicializo mapa y fondos
 	palo = Palo(textura);
 	sf::Sprite fondo(textura);
 	fondo.setTextureRect(sf::IntRect(0, 40.0, 800.0, 600.0));
+	/*
 	sf::CircleShape circulo(1);
 	sf::CircleShape circulo2(1);
 	sf::CircleShape circulo3(1);
@@ -59,17 +67,16 @@ void Juego::bucleJuego()
 	circulo2.setFillColor(sf::Color::Red);
 	circulo3.setFillColor(sf::Color::Red);
 	circulo4.setFillColor(sf::Color::Red);
+	*/
+	Inicializa();
 
-	Inicializa(); //inicializar juego
-	sf::Event event;
-
-	while (ventana.isOpen())
-	{
-		//Proceso los eventos
-		while (ventana.pollEvent(event))
-		{
+    while (ventana.isOpen())
+    {
+        sf::Event event;
+        while (ventana.pollEvent(event))
+        {
 			estados.back()->ManejarEventos(event);
-		}
+        }
 
 		if (relojUpdate.getElapsedTime().asMilliseconds() > UPDATE_TIME)
 		{
@@ -82,9 +89,9 @@ void Juego::bucleJuego()
 		ventana.setView(pantalla);
 		// Clear screen
 		ventana.clear();
-		ventana.draw(fondo);
 
-		estados.back()->Render(percentick);
+		// Start render
+		ventana.draw(fondo);
 		for (unsigned int i = 0; i < bolas.size(); i++)
 		{
 			if (!bolas[i].caida)
@@ -92,6 +99,8 @@ void Juego::bucleJuego()
 				bolas[i].Render(ventana, percentick);
 			}
 		}
+
+		estados.back()->Render(percentick);
 
 		for (unsigned int i = 0; i < barra.size(); i++)
 		{
@@ -102,10 +111,8 @@ void Juego::bucleJuego()
 		{
 			abaco[i].Render(ventana, percentick);
 		}
-
-		// Update the window
-		ventana.display();
-	}
+        ventana.display();
+    }
 }
 /*
     Genera las bolas mandandoles la textura y la posicion en la que se tienen que generar
@@ -121,9 +128,9 @@ void Juego::generaBolas()
 }
 
 void Juego::CambiarEstado(Estado* estado)
-{
-	estados.back()->Inicializar();
+{		
 	estados.push_back(estado);
+	estados.back()->Inicializar();
 }
 
 /*
@@ -133,10 +140,8 @@ void Juego::CambiarEstado(Estado* estado)
 void Juego::Inicializa()
 {
 	if (!textura.loadFromFile("resources/Sprite_prob.png"))
-		printf("No se ha podido encontrar textura");
+	printf("No se ha podido encontrar textura");
 
-	//estado = 0;
-	//estados.push_back(EstadoApuntar());
 	//posiciones en las que se generaran las bolas al inicar/reiniciar o al volver a la mesa
 	positions.push_back(sf::Vector2f(590.0, 190.0));
 	positions.push_back(sf::Vector2f(250.0, 190.0));
@@ -202,7 +207,7 @@ void Juego::Inicializa()
 			sprite.setSize(sf::Vector2f(5, 10));
 			sprite.setFillColor(sf::Color::Red);
 			sprite.setPosition(290 + i * 10, 500);
-			pieza.setPosPR(sf::Vector2(290.f + i * 10, 500.f));
+			pieza.setPosPR(sf::Vector2f(290.f + i * 10, 500.f));
 			pieza.setPosSg(sf::Vector2f(290.f + i * 10, 500.f));
 		}
 		else
@@ -210,7 +215,7 @@ void Juego::Inicializa()
 			sprite.setSize(sf::Vector2f(5, 15));
 			sprite.setFillColor(sf::Color::Blue);
 			sprite.setPosition(290 + i * 10, 495);
-			pieza.setPosPR(sf::Vector2(290.f + i * 10, 495.f));
+			pieza.setPosPR(sf::Vector2f(290.f + i * 10, 495.f));
 			pieza.setPosSg(sf::Vector2f(290.f + i * 10, 495.f));
 		}
 		pieza.sprite = sprite;
