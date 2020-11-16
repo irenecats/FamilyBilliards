@@ -33,4 +33,5 @@ private:
 	static EstadoAnimacionAbaco instancia;
 
 	void setVelGrupo(int inicio, int fin, float vel);
+	void stopGrupo(int inicio, int fin);
 };

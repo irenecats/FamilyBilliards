@@ -65,7 +65,10 @@ void EstadoAnimacionBolas::Update(float timeElapsed)
 				caidas.clear();
 			}
 		}
-	}
+	}else if (caidas.size() == 0)
+	{
+		Juego::Instance()->CambiarEstado(EstadoApuntar::Instancia());
+	}	
 }
 void EstadoAnimacionBolas::esValida(Bola* bola)
 {
@@ -117,8 +120,9 @@ void EstadoAnimacionBolas::addCaidas(std::vector<Bola*> bolas)
 void EstadoAnimacionBolas::Render(float percentick)
 {
 	Juego* juego = Juego::Instance();
-
-	caidas[bolaActual]->Render(juego->ventana, percentick);
+	if(caidas.size() > 0){
+		caidas[bolaActual]->Render(juego->ventana, percentick);
+	}
 }
 
 /*

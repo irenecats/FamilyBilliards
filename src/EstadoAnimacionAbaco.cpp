@@ -32,23 +32,25 @@ void EstadoAnimacionAbaco::ManejarEventos(sf::Event event)
 
 void EstadoAnimacionAbaco::Update(float timeElapsed)
 {
-	if (posFin < piezas[puntosActuales]->getPos().x)
+	if ( nuevosPuntos != 0 && posFin < piezas[puntosActuales]->getPos().x)
 	{
-		setVelGrupo(puntosActuales, nuevosPuntos, -0.1f);
+		setVelGrupo(puntosActuales, puntosActuales + nuevosPuntos, -0.1f);
 	}
 	else
 	{
 		printf("Han llegado a su sitio\n");
-		setVelGrupo(puntosActuales, nuevosPuntos, 0.f);
+		stopGrupo(puntosActuales, puntosActuales + nuevosPuntos);
 		Jugador::Instance()->addPuntuacion(nuevosPuntos);
 		if (ganado)
 		{
+			std::cout<<"Aqui iria la pantalla de victoria"<<std::endl;
 			Juego::Instance()->CambiarEstado(EstadoApuntar::Instancia());
 		}
 		else
 		{
 			Juego::Instance()->CambiarEstado(EstadoApuntar::Instancia());
 		}
+		nuevosPuntos = 0;
 	}
 	for (int i = puntosActuales; i < (puntosActuales + nuevosPuntos); i++)
 	{
@@ -61,6 +63,15 @@ void EstadoAnimacionAbaco::setVelGrupo(int inicio, int fin, float vel)
 	{
 		piezas[i]->setVelocidad(vel);
 	}
+}
+
+void EstadoAnimacionAbaco::stopGrupo(int inicio, int fin){
+	for (int i = inicio; i < fin; i++)
+	{
+		piezas[i]->setPosSg(piezas[i]->getPos());
+		piezas[i]->setPosPR(piezas[i]->getPos());
+	}
+	setVelGrupo(inicio, fin, 0.f);
 }
 
 void EstadoAnimacionAbaco::Render(float percentick)

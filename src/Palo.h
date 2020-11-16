@@ -1,5 +1,6 @@
 #pragma once
 #include <iostream>
+#include <SFML/Graphics.hpp>
 
 #define VEL_MAX 0.4f
 #define VEL_MIN 0.1f

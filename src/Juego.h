@@ -16,6 +16,7 @@ public:
 	//Variables
 	sf::RenderWindow ventana;
 	sf::Texture textura;
+	sf::Image icon;
 	std::vector<sf::Vector2f> positions; //posiciones iniciales al generar las bolas
 
 	std::vector<Bola> bolas;   //bolas en juego
@@ -41,8 +42,9 @@ private:
 	static Juego* instancia;
 
 	sf::View pantalla;
-	sf::View mapa;
+	//sf::View mapa;
 	sf::Clock relojUpdate;
+
 
 	std::vector<Estado*> estados;
 
