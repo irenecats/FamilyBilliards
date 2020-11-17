@@ -14,10 +14,6 @@ public:
 	void Render(sf::RenderWindow& ventana, float percentTick);
 	void Update(float timeElapsed, float vel);
 
-	void tiro();
-	//bool getTerminado();
-	//void setTerminado(bool);
-	//void calculoVelocidad();
 	sf::Vector2f getPosSecond();
 	sf::Vector2f getPosFirst();
 	sf::Vector2f getCurrentPos();

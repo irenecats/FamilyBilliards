@@ -16,14 +16,13 @@ public:
 	//Variables
 	sf::RenderWindow ventana;
 	sf::Texture textura;
-	sf::Image icon;
 	std::vector<sf::Vector2f> positions; //posiciones iniciales al generar las bolas
 
 	std::vector<Bola> bolas;   //bolas en juego
 	std::vector<Bola> barra;   //bolas en la barra
 	std::vector<Bola*> caidas; //bolas que acaban de caer
 	Palo palo;				   //palo de billar
-	//Abaco abaco;			   //puntos actuales
+	sf::Sprite fondo;		   //fondo del juego
 	std::vector<Abaco> abaco;
 
 	std::vector<sf::RectangleShape> paredes; //colliders de las paredes
@@ -44,14 +43,15 @@ private:
 	sf::View pantalla;
 	//sf::View mapa;
 	sf::Clock relojUpdate;
+	
 
-
-	std::vector<Estado*> estados;
+	Estado* estados;
 
 	Juego();
 	void prepararVentana();
 	void generaBolas();
 
 	void Inicializa();
-	//	void Reinicia();
+	void Reinicia();
+	void GeneraAbaco();
 };

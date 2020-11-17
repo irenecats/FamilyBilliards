@@ -9,15 +9,6 @@ void EstadoMovBolas::Inicializar()
 {
 	primera = nullptr;
 }
-void EstadoMovBolas::Limpiar()
-{
-}
-void EstadoMovBolas::Pausar()
-{
-}
-void EstadoMovBolas::Continuar()
-{
-}
 
 void EstadoMovBolas::ManejarEventos(sf::Event event)
 {
@@ -62,7 +53,7 @@ void EstadoMovBolas::Update(float timeElapsed)
 	if (comprobarParadas())
 	{
 		Juego::Instance()->CambiarEstado(EstadoAnimacionBolas::Instancia());
-	} //si están paradas cambio de estado -> sin
+	} //si están paradas cambio de estado
 }
 void EstadoMovBolas::Render(float percentick)
 {
@@ -158,7 +149,7 @@ void EstadoMovBolas::colisionTronera()
 
 				float separacion = sqrt((vecB1B2.x * vecB1B2.x) + (vecB1B2.y * vecB1B2.y));
 
-				if (separacion <= (tronera->getRadius() + 5))
+				if (separacion <= (tronera->getRadius() + 4))
 				{
 					std::cout << "Ha caido " << bola->getID() << std::endl;
 					bola->setVelocidad(sf::Vector2f(0, 0));

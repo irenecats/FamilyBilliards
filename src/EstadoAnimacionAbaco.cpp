@@ -14,12 +14,10 @@ void EstadoAnimacionAbaco::Inicializar()
 }
 void EstadoAnimacionAbaco::Limpiar()
 {
-}
-void EstadoAnimacionAbaco::Pausar()
-{
-}
-void EstadoAnimacionAbaco::Continuar()
-{
+	nuevosPuntos = 0;
+	ganado = false;
+	piezas.clear();
+	posFin = 100;
 }
 
 void EstadoAnimacionAbaco::ManejarEventos(sf::Event event)
@@ -48,6 +46,11 @@ void EstadoAnimacionAbaco::Update(float timeElapsed)
 		}
 		else
 		{
+			std::cout<<"Vuelvo a apuntar"<<std::endl;
+			if(Juego::Instance()->bolas.size()>1)
+			{
+				Jugador::Instance()->apuntado(Juego::Instance()->bolas[0].getCurrentPos(),Juego::Instance()->bolas[1].getCurrentPos());
+			}
 			Juego::Instance()->CambiarEstado(EstadoApuntar::Instancia());
 		}
 		nuevosPuntos = 0;

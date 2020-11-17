@@ -114,6 +114,9 @@ int Jugador::getPuntuacion()
 {
 	return puntuacion;
 }
+void Jugador::setPuntuacion(int puntos){
+	puntuacion = puntos;
+}
 
 sf::Vector2f Jugador::getPos()
 {

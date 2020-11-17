@@ -5,10 +5,6 @@ class EstadoGolpear : public Estado
 {
 public:
 	void Inicializar();
-	void Limpiar();
-
-	void Pausar();
-	void Continuar();
 
 	void ManejarEventos(sf::Event event);
 	void Update(float timeElapsed);

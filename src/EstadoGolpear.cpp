@@ -9,15 +9,6 @@ void EstadoGolpear::Inicializar()
 {
 	dir = false;
 }
-void EstadoGolpear::Limpiar()
-{
-}
-void EstadoGolpear::Pausar()
-{
-}
-void EstadoGolpear::Continuar()
-{
-}
 
 void EstadoGolpear::ManejarEventos(sf::Event event)
 {
@@ -28,7 +19,7 @@ void EstadoGolpear::ManejarEventos(sf::Event event)
 	if (event.key.code == sf::Keyboard::Space && sf::Keyboard::isKeyPressed(sf::Keyboard::Space))
 	{
 		printf("Estado 2: animacion de tiro\n");
-		dir = true; //TODO: mirar si hacer esto al inicializar de todas
+		dir = true;
 		tiraBola(Jugador::Instance()->getCurrentPos(), Juego::Instance()->bolas[0].getPosSecond(), calcVel(Juego::Instance()->palo.getPosSecond()));
 		Juego::Instance()->CambiarEstado(EstadoAnimacionGolpeo::Instancia());
 	}

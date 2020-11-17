@@ -6,19 +6,6 @@
 EstadoApuntar EstadoApuntar::instancia;
 void EstadoApuntar::Inicializar()
 {
-	if(Juego::Instance()->bolas.size()>1)
-	{
-		Jugador::Instance()->apuntado(Juego::Instance()->bolas[0].getCurrentPos(),Juego::Instance()->bolas[1].getCurrentPos());
-	}
-}
-void EstadoApuntar::Limpiar()
-{
-}
-void EstadoApuntar::Pausar()
-{
-}
-void EstadoApuntar::Continuar()
-{
 }
 
 void EstadoApuntar::ManejarEventos(sf::Event event)

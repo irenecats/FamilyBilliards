@@ -1,6 +1,6 @@
 #include <Juego.h>
 #include <EstadoAnimacionAbaco.h>
-
+#include <EstadoApuntar.h>
 Juego* Juego::instancia = 0;
 Juego* Juego::Instance()
 {
@@ -25,49 +25,18 @@ void Juego::prepararVentana()
 	printf("Estado 0: Apunto");
 
 	pantalla = sf::View(sf::FloatRect(0, 0, 800.f, 600.f));
-    //sf::View mapa(sf::FloatRect(0,0,200,60));
-    //mapa.setViewport(sf::FloatRect(0.25, 0.75, 0.5, 0.20));
 		//TODO: ponerlo en la textura con todo lo demás y sacarlo de ahi?
-
-
 	ventana.create(sf::VideoMode(800, 600), "Family Billiards");
     ventana.setFramerateLimit(60);
 	ventana.setKeyRepeatEnabled(false);
 
+		sf::Image icon;
 		icon.loadFromFile("resources/sfml-icon-big.png");
         ventana.setIcon(1024,1024,icon.getPixelsPtr());
-
-	//util::Platform platform;
-	// in Windows at least, this must be called before creating the ventana
-	//float screenScalingFactor = platform.getScreenScalingFactor(ventana.getSystemHandle());
-	//ventana.create(sf::VideoMode(800.0f * screenScalingFactor, 600.0f * screenScalingFactor), "Family Billiards");
-	//platform.setIcon(ventana.getSystemHandle());
 }
 void Juego::bucleJuego()
 {
-	prepararVentana();
 
-    sf::CircleShape shape(300.f);
-    shape.setFillColor(sf::Color::Green);
-
-	//Inicializo mapa y fondos
-	palo = Palo(textura);
-	sf::Sprite fondo(textura);
-	fondo.setTextureRect(sf::IntRect(0, 40.0, 800.0, 600.0));
-	/*
-	sf::CircleShape circulo(1);
-	sf::CircleShape circulo2(1);
-	sf::CircleShape circulo3(1);
-	sf::CircleShape circulo4(1);
-	circulo2.setPosition(mapa.getSize().x - 2, 0);
-	circulo3.setPosition(mapa.getSize().x - 2, mapa.getSize().y - 2);
-	circulo4.setPosition(0, mapa.getSize().y - 2);
-
-	circulo.setFillColor(sf::Color::Red);
-	circulo2.setFillColor(sf::Color::Red);
-	circulo3.setFillColor(sf::Color::Red);
-	circulo4.setFillColor(sf::Color::Red);
-	*/
 	Inicializa();
 
     while (ventana.isOpen())
@@ -75,13 +44,19 @@ void Juego::bucleJuego()
         sf::Event event;
         while (ventana.pollEvent(event))
         {
-			estados.back()->ManejarEventos(event);
+			estados->ManejarEventos(event);
         }
 
 		if (relojUpdate.getElapsedTime().asMilliseconds() > UPDATE_TIME)
 		{
 			float timeElapsed = relojUpdate.restart().asMilliseconds();
-			estados.back()->Update(timeElapsed);
+			estados->Update(timeElapsed);
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
+			{
+				std::cout<<"Pulsado"<<std::endl;
+				Reinicia();
+			}
 		}
 
 		float percentick = std::min(1.f, (float)relojUpdate.getElapsedTime().asMilliseconds() / UPDATE_TIME);
@@ -100,7 +75,7 @@ void Juego::bucleJuego()
 			}
 		}
 
-		estados.back()->Render(percentick);
+		estados->Render(percentick);
 
 		for (unsigned int i = 0; i < barra.size(); i++)
 		{
@@ -129,8 +104,8 @@ void Juego::generaBolas()
 
 void Juego::CambiarEstado(Estado* estado)
 {		
-	estados.push_back(estado);
-	estados.back()->Inicializar();
+	estados = estado;
+	estados->Inicializar();
 }
 
 /*
@@ -141,6 +116,14 @@ void Juego::Inicializa()
 {
 	if (!textura.loadFromFile("resources/Sprite_prob.png"))
 	printf("No se ha podido encontrar textura");
+
+	prepararVentana();
+
+
+	//Inicializo mapa y fondos
+	palo = Palo(textura);
+	fondo = sf::Sprite(textura);
+	fondo.setTextureRect(sf::IntRect(0, 40.0, 800.0, 600.0));
 
 	//posiciones en las que se generaran las bolas al inicar/reiniciar o al volver a la mesa
 	positions.push_back(sf::Vector2f(590.0, 190.0));
@@ -154,6 +137,7 @@ void Juego::Inicializa()
 	positions.push_back(sf::Vector2f(178.0, 205.0));
 	positions.push_back(sf::Vector2f(154.0, 190.0));
 
+	//genero y posiciono la colision de las paredes
 	paredes.push_back(sf::RectangleShape(sf::Vector2f(325, 20)));
 	paredes.push_back(sf::RectangleShape(sf::Vector2f(325, 20)));
 	paredes.push_back(sf::RectangleShape(sf::Vector2f(325, 20)));
@@ -173,6 +157,7 @@ void Juego::Inicializa()
 		paredes[i].setOrigin(paredes[i].getSize().x / 2, paredes[i].getSize().y / 2);
 	}
 
+	//genero y posiciono la colision de las troneras
 	troneras.push_back(sf::CircleShape(17));
 	troneras.push_back(sf::CircleShape(17));
 	troneras.push_back(sf::CircleShape(17));
@@ -194,14 +179,31 @@ void Juego::Inicializa()
 
 	generaBolas();
 	Jugador::Instance()->setPointer(textura);
-	//Mapa::Instance()->setValues();
 
-	//TODO: cambiar por 45?
+	GeneraAbaco();
+}
+void Juego::Reinicia(){
+	CambiarEstado(EstadoApuntar::Instancia());
+
+	bolas.clear();
+	barra.clear();
+	caidas.clear();
+	generaBolas();
+	Jugador::Instance()->setPuntuacion(0);
+	Jugador::Instance()->setPointer(textura);
+
+	//limpia todos los estados
+	EstadoAnimacionAbaco::Instancia()->Limpiar();
+	abaco.clear();
+	GeneraAbaco();
+}
+
+void Juego::GeneraAbaco(){
 	Abaco pieza;
 	sf::RectangleShape sprite;
 	for (int i = 0; i < 50; i++)
 	{
-		//genera la barras
+		//genera las piezas del abaco
 		if ((i + 1) % 5 != 0)
 		{
 			sprite.setSize(sf::Vector2f(5, 10));
@@ -226,7 +228,6 @@ void Juego::Inicializa()
 		EstadoAnimacionAbaco::Instancia()->piezas.push_back(&abaco[i]);
 	}
 }
-
 Juego::Juego()
 {
 	//ctor
