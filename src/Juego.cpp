@@ -25,14 +25,13 @@ void Juego::prepararVentana()
 	printf("Estado 0: Apunto");
 
 	pantalla = sf::View(sf::FloatRect(0, 0, 800.f, 600.f));
-		//TODO: ponerlo en la textura con todo lo demás y sacarlo de ahi?
 	ventana.create(sf::VideoMode(800, 600), "Family Billiards");
     ventana.setFramerateLimit(60);
 	ventana.setKeyRepeatEnabled(false);
 
-		sf::Image icon;
-		icon.loadFromFile("resources/sfml-icon-big.png");
-        ventana.setIcon(1024,1024,icon.getPixelsPtr());
+	sf::Image icon;
+	icon.loadFromFile("resources/bola9.png");
+	ventana.setIcon(19,19,icon.getPixelsPtr());
 }
 void Juego::bucleJuego()
 {
