@@ -47,11 +47,6 @@ void EstadoAnimacionAbaco::Update(float timeElapsed)
 		}
 		else
 		{
-			std::cout<<"Vuelvo a apuntar"<<std::endl;
-			if(Juego::Instance()->bolas.size()>1)
-			{
-				Jugador::Instance()->apuntado(Juego::Instance()->bolas[0].getCurrentPos(),Juego::Instance()->bolas[1].getCurrentPos());
-			}
 			Juego::Instance()->CambiarEstado(EstadoApuntar::Instancia());
 		}
 		nuevosPuntos = 0;

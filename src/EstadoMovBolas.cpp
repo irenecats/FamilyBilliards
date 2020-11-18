@@ -53,6 +53,10 @@ void EstadoMovBolas::Update(float timeElapsed)
 	if (comprobarParadas())
 	{
 		Juego::Instance()->CambiarEstado(EstadoAnimacionBolas::Instancia());
+		if(Juego::Instance()->bolas.size()>1)
+		{
+			Jugador::Instance()->apuntado(Juego::Instance()->bolas[0].getCurrentPos(),Juego::Instance()->bolas[1].getCurrentPos());
+		}
 	} //si están paradas cambio de estado
 }
 void EstadoMovBolas::Render(float percentick)
@@ -157,7 +161,6 @@ void EstadoMovBolas::colisionTronera()
 					bola->setPosPR(sf::Vector2f(590, 400));
 					bola->setPosSg(sf::Vector2f(590, 400));
 					caidas.push_back(bola);
-					std::cout<<"num bolas caidas "<<caidas.size()<<std::endl;
 				}
 			}
 		}
@@ -228,7 +231,9 @@ void EstadoMovBolas::choque(Bola* bola1, Bola* bola2)
 
 		float p = 2 * (normal.x * (b1vel.x - b2vel.x) + normal.y * (b1vel.y - b2vel.y)) / 2;
 
-		bola1->setVelocidad(sf::Vector2f(b1vel.x - p * 0.75f * normal.x, b1vel.y - p * 0.75f * normal.y));
-		bola2->setVelocidad(sf::Vector2f(b2vel.x + p * 0.75f * normal.x, b2vel.y + p * 0.75f * normal.y));
+		//bola1->setVelocidad(sf::Vector2f(b1vel.x - p * 0.75f * normal.x, b1vel.y - p * 0.75f * normal.y));
+		//bola2->setVelocidad(sf::Vector2f(b2vel.x + p * 0.75f * normal.x, b2vel.y + p * 0.75f * normal.y));
+		bola1->setVelocidad(sf::Vector2f(b1vel.x - p * 0.9f * normal.x, b1vel.y - p * 0.975f * normal.y));
+		bola2->setVelocidad(sf::Vector2f(b2vel.x + p * 0.9f * normal.x, b2vel.y + p * 0.975f * normal.y));
 	}
 }
