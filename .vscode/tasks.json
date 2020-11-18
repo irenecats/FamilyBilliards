@@ -1,0 +1,42 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Clean & Make",
+            "type": "shell",
+            "command": "make clean && make"
+        },
+        {
+            "label": "Clean & Debug",
+            "type": "shell",
+            "command": "make clean && make DEBUG=1"
+        },
+        {
+            "label": "Debug",
+            "type": "shell",
+            "command": "make clean && make DEBUG=1"
+        },
+        {
+            "label": "Clean",
+            "type": "shell",
+            "command": "make clean"
+        },
+        {
+            "label": "Make",
+            "type": "shell",
+            "command": "make"
+        },
+        {
+            "label": "Make & Run ",
+            "type": "shell",
+            "command": "make clean && make && ./bin/game",
+            "problemMatcher": [],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
+        }
+    ]
+}
