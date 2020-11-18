@@ -79,9 +79,9 @@ void Jugador::setPointer(sf::Texture& text)
 	}
 	textoPuntos.setFillColor(sf::Color::White);
 	textoPuntos.setFont(fuente);
-	textoPuntos.setCharacterSize(20);
+	textoPuntos.setCharacterSize(27);
 	textoPuntos.setString("Pts. " + std::to_string(puntuacion));
-	textoPuntos.setPosition(100, 550);
+	textoPuntos.setPosition(680, 392);
 }
 
 /*

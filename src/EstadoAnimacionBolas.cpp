@@ -54,6 +54,7 @@ void EstadoAnimacionBolas::Update(float timeElapsed)
 			if (bolaActual == caidas.size())
 			{
 				//he pasado por todas las bolas y cambio de estado
+				printf("paso por el abaco");
 				Juego::Instance()->CambiarEstado(EstadoAnimacionAbaco::Instancia());
 				caidas.clear();
 				primera = -1;
@@ -61,7 +62,9 @@ void EstadoAnimacionBolas::Update(float timeElapsed)
 		}
 	}else if (caidas.size() == 0)
 	{
+		printf("apunto otra vez y no paso por el abaco");
 		Juego::Instance()->CambiarEstado(EstadoApuntar::Instancia());
+		primera = -1;
 	}	
 }
 void EstadoAnimacionBolas::esValida(Bola* bola)

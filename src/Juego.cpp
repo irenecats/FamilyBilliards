@@ -1,6 +1,7 @@
 #include <Juego.h>
 #include <EstadoAnimacionAbaco.h>
 #include <EstadoApuntar.h>
+#include <EstadoVictoria.h>
 Juego* Juego::instancia = 0;
 Juego* Juego::Instance()
 {
@@ -17,10 +18,7 @@ void Juego::prepararVentana()
 	printf("Movimiento con las flechas del teclado\n");
 	printf("Shift para que el pointer se mueva mas rapido\n");
 	printf("Espacio para preparar golpe y otra vez espacio para golpear\n");
-	printf("Si volver al moddo apuntar vuelve a pulsar las flechas del teclado\n");
-	printf("---------\n");
-	printf("Pulsa R para resetar la partida\n");
-	printf("Pulsa D para ver las colisiones\n");
+	printf("Para volver al modo apuntar pulsa las flechas del teclado\n");
 	printf("---------\n");
 	printf("Estado 0: Apunto");
 
@@ -50,12 +48,6 @@ void Juego::bucleJuego()
 		{
 			float timeElapsed = relojUpdate.restart().asMilliseconds();
 			estados->Update(timeElapsed);
-
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
-			{
-				std::cout<<"Pulsado"<<std::endl;
-				Reinicia();
-			}
 		}
 
 		float percentick = std::min(1.f, (float)relojUpdate.getElapsedTime().asMilliseconds() / UPDATE_TIME);
@@ -180,6 +172,7 @@ void Juego::Inicializa()
 
 	generaBolas();
 	Jugador::Instance()->setPointer(textura);
+	EstadoVictoria::Instancia()->setFuente();
 
 	GeneraAbaco();
 }
@@ -210,16 +203,16 @@ void Juego::GeneraAbaco(){
 			sprite.setSize(sf::Vector2f(5, 10));
 			sprite.setFillColor(sf::Color::Red);
 			sprite.setPosition(290 + i * 10, 500);
-			pieza.setPosPR(sf::Vector2f(290.f + i * 10, 500.f));
-			pieza.setPosSg(sf::Vector2f(290.f + i * 10, 500.f));
+			pieza.setPosPR(sf::Vector2f(240.f + i * 10, 500.f));
+			pieza.setPosSg(sf::Vector2f(240.f + i * 10, 500.f));
 		}
 		else
 		{
 			sprite.setSize(sf::Vector2f(5, 15));
 			sprite.setFillColor(sf::Color::Blue);
 			sprite.setPosition(290 + i * 10, 495);
-			pieza.setPosPR(sf::Vector2f(290.f + i * 10, 495.f));
-			pieza.setPosSg(sf::Vector2f(290.f + i * 10, 495.f));
+			pieza.setPosPR(sf::Vector2f(240.f + i * 10, 495.f));
+			pieza.setPosSg(sf::Vector2f(240.f + i * 10, 495.f));
 		}
 		pieza.sprite = sprite;
 		abaco.push_back(pieza);

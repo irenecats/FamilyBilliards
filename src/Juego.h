@@ -34,6 +34,7 @@ public:
 	void bucleJuego();
 	void CambiarEstado(Estado* estado);
 	void tiraBola(float);
+	void Reinicia();
 
 protected:
 private:
@@ -52,6 +53,5 @@ private:
 	void generaBolas();
 
 	void Inicializa();
-	void Reinicia();
 	void GeneraAbaco();
 };

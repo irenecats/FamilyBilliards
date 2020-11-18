@@ -1,5 +1,6 @@
 #include <EstadoAnimacionAbaco.h>
 #include <EstadoApuntar.h>
+#include <EstadoVictoria.h>
 #include <Juego.h>
 
 EstadoAnimacionAbaco EstadoAnimacionAbaco::instancia;
@@ -10,14 +11,14 @@ void EstadoAnimacionAbaco::Inicializar()
 
 	animando = true;
 	puntosActuales = Jugador::Instance()->getPuntuacion();
-	posFin = (100 + (puntosActuales)*10);
+	posFin = (70 + (puntosActuales)*10);
 }
 void EstadoAnimacionAbaco::Limpiar()
 {
 	nuevosPuntos = 0;
 	ganado = false;
 	piezas.clear();
-	posFin = 100;
+	posFin = 70;
 }
 
 void EstadoAnimacionAbaco::ManejarEventos(sf::Event event)
@@ -41,16 +42,11 @@ void EstadoAnimacionAbaco::Update(float timeElapsed)
 		Jugador::Instance()->addPuntuacion(nuevosPuntos);
 		if (ganado)
 		{
-			std::cout<<"Aqui iria la pantalla de victoria"<<std::endl;
-			Juego::Instance()->CambiarEstado(EstadoApuntar::Instancia());
+			std::cout<<"has ganado, yay"<<std::endl;
+			Juego::Instance()->CambiarEstado(EstadoVictoria::Instancia());
 		}
 		else
 		{
-			std::cout<<"Vuelvo a apuntar"<<std::endl;
-			if(Juego::Instance()->bolas.size()>1)
-			{
-				Jugador::Instance()->apuntado(Juego::Instance()->bolas[0].getCurrentPos(),Juego::Instance()->bolas[1].getCurrentPos());
-			}
 			Juego::Instance()->CambiarEstado(EstadoApuntar::Instancia());
 		}
 		nuevosPuntos = 0;
