@@ -1,48 +1,28 @@
 {
-	"version": "0.2.0",
-	"configurations": [
-		{
-			"name": "GDB/LLDB",
-			"type": "cppdbg",
-			"request": "launch",
-			"program": "${workspaceFolder}/bin/Debug/${workspaceRootFolderName}.exe",
-			"args": [
-				"-exec info registers"
-			],
-			"stopAtEntry": false,
-			"cwd": "${workspaceFolder}",
-			"preLaunchTask": "Build: Debug",
-			"externalConsole": false,
-			"internalConsoleOptions": "neverOpen",
-			"setupCommands": [
-				{
-					"description": "Enable pretty-printing for gdb",
-					"text": "-enable-pretty-printing",
-					"ignoreFailures": true
-				}
-			],
-			"windows": {
-				"MIMode": "gdb",
-				"miDebuggerPath": "C:/mingw32/bin/gdb.exe",
-				"env": {
-					"Path": "${config:terminal.integrated.env.windows.Path}"
-				}
-			},
-			"linux": {
-				"program": "${workspaceFolder}/bin/Debug/${workspaceRootFolderName}",
-				"MIMode": "gdb",
-				"miDebuggerPath": "/usr/bin/gdb",
-				"env": {
-					"PATH": "${config:terminal.integrated.env.linux.PATH}",
-				}
-			},
-			"osx": {
-				"program": "${workspaceFolder}/bin/Debug/${workspaceRootFolderName}",
-				"MIMode": "lldb",
-				"env": {
-					"PATH": "${config:terminal.integrated.env.osx.PATH}",
-				}
-			},
-		}
-	]
+  // Use IntelliSense to learn about possible attributes.
+  // Hover to view descriptions of existing attributes.
+  // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+  "version": "0.2.0",
+  "configurations": [
+      {
+          "name": "(gdb) Iniciar",
+          "type": "cppdbg",
+          "request": "launch",
+          "program": "${workspaceFolder}/bin/game",
+          "args": [],
+          "stopAtEntry": false,
+          "cwd": "${workspaceFolder}",
+          "environment": [],
+          "externalConsole": false,
+          "MIMode": "gdb",
+          "miDebuggerPath": "/usr/bin/gdb",
+          "setupCommands": [
+              {
+                  "description": "Habilitar la impresión con sangría para gdb",
+                  "text": "-enable-pretty-printing",
+                  "ignoreFailures": true
+              }
+          ]
+      }
+  ]
 }

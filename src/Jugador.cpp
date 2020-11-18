@@ -92,7 +92,6 @@ void Jugador::setPointer(sf::Texture& text)
 void Jugador::apuntado(sf::Vector2f blanca, sf::Vector2f menor)
 {
 	sf::Vector2f vect(menor.x - blanca.x, menor.y - blanca.y);
-	;
 
 	float mod = sqrt((vect.x * vect.x) + (vect.y * vect.y));
 
@@ -114,6 +113,9 @@ void Jugador::addPuntuacion(int puntos)
 int Jugador::getPuntuacion()
 {
 	return puntuacion;
+}
+void Jugador::setPuntuacion(int puntos){
+	puntuacion = puntos;
 }
 
 sf::Vector2f Jugador::getPos()

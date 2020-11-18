@@ -7,15 +7,6 @@ EstadoApuntar EstadoApuntar::instancia;
 void EstadoApuntar::Inicializar()
 {
 }
-void EstadoApuntar::Limpiar()
-{
-}
-void EstadoApuntar::Pausar()
-{
-}
-void EstadoApuntar::Continuar()
-{
-}
 
 void EstadoApuntar::ManejarEventos(sf::Event event)
 {

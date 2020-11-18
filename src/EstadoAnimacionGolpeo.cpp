@@ -7,15 +7,7 @@
 EstadoAnimacionGolpeo EstadoAnimacionGolpeo::instancia;
 void EstadoAnimacionGolpeo::Inicializar()
 {
-}
-void EstadoAnimacionGolpeo::Limpiar()
-{
-}
-void EstadoAnimacionGolpeo::Pausar()
-{
-}
-void EstadoAnimacionGolpeo::Continuar()
-{
+	pause = 0.f;
 }
 
 void EstadoAnimacionGolpeo::ManejarEventos(sf::Event event)
@@ -37,7 +29,6 @@ void EstadoAnimacionGolpeo::Update(float timeElapsed)
 		}
 		else
 		{
-			pause = 0.f; // Todo: ponerlo en el init?
 			printf("Estado 3: Bolas en movimiento");
 			Juego::Instance()->CambiarEstado(EstadoMovBolas::Instancia());
 		}

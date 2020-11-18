@@ -7,15 +7,11 @@
 EstadoAnimacionBolas EstadoAnimacionBolas::instancia;
 void EstadoAnimacionBolas::Inicializar()
 {
+	bolaActual = 0;
 }
 void EstadoAnimacionBolas::Limpiar()
 {
-}
-void EstadoAnimacionBolas::Pausar()
-{
-}
-void EstadoAnimacionBolas::Continuar()
-{
+	caidas.clear();
 }
 
 void EstadoAnimacionBolas::ManejarEventos(sf::Event event)
@@ -36,7 +32,6 @@ void EstadoAnimacionBolas::Update(float timeElapsed)
 			if (!animando)
 			{
 				//inicio animación y calculo la posición en la que quedaría en la barra
-				//TODO: ponerlo en el init
 				animando = true;
 				posFinal = 212 + 30 * Juego::Instance()->barra.size();
 			}
@@ -59,13 +54,15 @@ void EstadoAnimacionBolas::Update(float timeElapsed)
 			if (bolaActual == caidas.size())
 			{
 				//he pasado por todas las bolas y cambio de estado
-				primera = -1;
-				bolaActual = 0;
 				Juego::Instance()->CambiarEstado(EstadoAnimacionAbaco::Instancia());
 				caidas.clear();
+				primera = -1;
 			}
 		}
-	}
+	}else if (caidas.size() == 0)
+	{
+		Juego::Instance()->CambiarEstado(EstadoApuntar::Instancia());
+	}	
 }
 void EstadoAnimacionBolas::esValida(Bola* bola)
 {
@@ -117,8 +114,9 @@ void EstadoAnimacionBolas::addCaidas(std::vector<Bola*> bolas)
 void EstadoAnimacionBolas::Render(float percentick)
 {
 	Juego* juego = Juego::Instance();
-
-	caidas[bolaActual]->Render(juego->ventana, percentick);
+	if(caidas.size() > 0){
+		caidas[bolaActual]->Render(juego->ventana, percentick);
+	}
 }
 
 /*

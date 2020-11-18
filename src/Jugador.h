@@ -18,7 +18,8 @@ public:
 	sf::Vector2f getPos();
 	sf::Vector2f getCurrentPos();
 	int getPuntuacion();
-	void addPuntuacion(int);
+	void setPuntuacion(int puntos);
+	void addPuntuacion(int puntos);
 
 	sf::Vector2f movimiento;
 

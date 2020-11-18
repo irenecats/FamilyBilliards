@@ -22,7 +22,7 @@ public:
 	std::vector<Bola> barra;   //bolas en la barra
 	std::vector<Bola*> caidas; //bolas que acaban de caer
 	Palo palo;				   //palo de billar
-	//Abaco abaco;			   //puntos actuales
+	sf::Sprite fondo;		   //fondo del juego
 	std::vector<Abaco> abaco;
 
 	std::vector<sf::RectangleShape> paredes; //colliders de las paredes
@@ -41,15 +41,17 @@ private:
 	static Juego* instancia;
 
 	sf::View pantalla;
-	sf::View mapa;
+	//sf::View mapa;
 	sf::Clock relojUpdate;
+	
 
-	std::vector<Estado*> estados;
+	Estado* estados;
 
 	Juego();
 	void prepararVentana();
 	void generaBolas();
 
 	void Inicializa();
-	//	void Reinicia();
+	void Reinicia();
+	void GeneraAbaco();
 };

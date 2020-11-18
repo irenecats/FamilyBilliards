@@ -1,7 +1,6 @@
-#include "Juego.h"
-#include "Platform/Platform.hpp"
+#include <Juego.h>
 #include <EstadoAnimacionAbaco.h>
-
+#include <EstadoApuntar.h>
 Juego* Juego::instancia = 0;
 Juego* Juego::Instance()
 {
@@ -25,56 +24,38 @@ void Juego::prepararVentana()
 	printf("---------\n");
 	printf("Estado 0: Apunto");
 
-	util::Platform platform;
-
-	// in Windows at least, this must be called before creating the ventana
-	float screenScalingFactor = platform.getScreenScalingFactor(ventana.getSystemHandle());
-
-	ventana.create(sf::VideoMode(800.0f * screenScalingFactor, 600.0f * screenScalingFactor), "Family Billiards");
-	ventana.setFramerateLimit(60);
-	ventana.setKeyRepeatEnabled(false);
-	platform.setIcon(ventana.getSystemHandle());
-
 	pantalla = sf::View(sf::FloatRect(0, 0, 800.f, 600.f));
-	mapa = sf::View(sf::FloatRect(0, 0, 200, 60));
-	mapa.setViewport(sf::FloatRect(0.25, 0.75, 0.5, 0.20));
+	ventana.create(sf::VideoMode(800, 600), "Family Billiards");
+    ventana.setFramerateLimit(60);
+	ventana.setKeyRepeatEnabled(false);
+
+	sf::Image icon;
+	icon.loadFromFile("resources/bola9.png");
+	ventana.setIcon(19,19,icon.getPixelsPtr());
 }
 void Juego::bucleJuego()
 {
-	prepararVentana();
 
-	//Inicializo mapa y fondos
-	palo = Palo(textura);
-	sf::Sprite fondo(textura);
-	fondo.setTextureRect(sf::IntRect(0, 40.0, 800.0, 600.0));
-	sf::CircleShape circulo(1);
-	sf::CircleShape circulo2(1);
-	sf::CircleShape circulo3(1);
-	sf::CircleShape circulo4(1);
-	circulo2.setPosition(mapa.getSize().x - 2, 0);
-	circulo3.setPosition(mapa.getSize().x - 2, mapa.getSize().y - 2);
-	circulo4.setPosition(0, mapa.getSize().y - 2);
+	Inicializa();
 
-	circulo.setFillColor(sf::Color::Red);
-	circulo2.setFillColor(sf::Color::Red);
-	circulo3.setFillColor(sf::Color::Red);
-	circulo4.setFillColor(sf::Color::Red);
-
-	Inicializa(); //inicializar juego
-	sf::Event event;
-
-	while (ventana.isOpen())
-	{
-		//Proceso los eventos
-		while (ventana.pollEvent(event))
-		{
-			estados.back()->ManejarEventos(event);
-		}
+    while (ventana.isOpen())
+    {
+        sf::Event event;
+        while (ventana.pollEvent(event))
+        {
+			estados->ManejarEventos(event);
+        }
 
 		if (relojUpdate.getElapsedTime().asMilliseconds() > UPDATE_TIME)
 		{
 			float timeElapsed = relojUpdate.restart().asMilliseconds();
-			estados.back()->Update(timeElapsed);
+			estados->Update(timeElapsed);
+
+			if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
+			{
+				std::cout<<"Pulsado"<<std::endl;
+				Reinicia();
+			}
 		}
 
 		float percentick = std::min(1.f, (float)relojUpdate.getElapsedTime().asMilliseconds() / UPDATE_TIME);
@@ -82,9 +63,9 @@ void Juego::bucleJuego()
 		ventana.setView(pantalla);
 		// Clear screen
 		ventana.clear();
-		ventana.draw(fondo);
 
-		estados.back()->Render(percentick);
+		// Start render
+		ventana.draw(fondo);
 		for (unsigned int i = 0; i < bolas.size(); i++)
 		{
 			if (!bolas[i].caida)
@@ -92,6 +73,8 @@ void Juego::bucleJuego()
 				bolas[i].Render(ventana, percentick);
 			}
 		}
+
+		estados->Render(percentick);
 
 		for (unsigned int i = 0; i < barra.size(); i++)
 		{
@@ -103,9 +86,9 @@ void Juego::bucleJuego()
 			abaco[i].Render(ventana, percentick);
 		}
 
-		// Update the window
-		ventana.display();
-	}
+		Jugador::Instance()->RenderPoints(ventana);
+        ventana.display();
+    }
 }
 /*
     Genera las bolas mandandoles la textura y la posicion en la que se tienen que generar
@@ -121,9 +104,9 @@ void Juego::generaBolas()
 }
 
 void Juego::CambiarEstado(Estado* estado)
-{
-	estados.back()->Inicializar();
-	estados.push_back(estado);
+{		
+	estados = estado;
+	estados->Inicializar();
 }
 
 /*
@@ -133,10 +116,16 @@ void Juego::CambiarEstado(Estado* estado)
 void Juego::Inicializa()
 {
 	if (!textura.loadFromFile("resources/Sprite_prob.png"))
-		printf("No se ha podido encontrar textura");
+	printf("No se ha podido encontrar textura");
 
-	//estado = 0;
-	//estados.push_back(EstadoApuntar());
+	prepararVentana();
+
+
+	//Inicializo mapa y fondos
+	palo = Palo(textura);
+	fondo = sf::Sprite(textura);
+	fondo.setTextureRect(sf::IntRect(0, 40.0, 800.0, 600.0));
+
 	//posiciones en las que se generaran las bolas al inicar/reiniciar o al volver a la mesa
 	positions.push_back(sf::Vector2f(590.0, 190.0));
 	positions.push_back(sf::Vector2f(250.0, 190.0));
@@ -149,6 +138,7 @@ void Juego::Inicializa()
 	positions.push_back(sf::Vector2f(178.0, 205.0));
 	positions.push_back(sf::Vector2f(154.0, 190.0));
 
+	//genero y posiciono la colision de las paredes
 	paredes.push_back(sf::RectangleShape(sf::Vector2f(325, 20)));
 	paredes.push_back(sf::RectangleShape(sf::Vector2f(325, 20)));
 	paredes.push_back(sf::RectangleShape(sf::Vector2f(325, 20)));
@@ -168,6 +158,7 @@ void Juego::Inicializa()
 		paredes[i].setOrigin(paredes[i].getSize().x / 2, paredes[i].getSize().y / 2);
 	}
 
+	//genero y posiciono la colision de las troneras
 	troneras.push_back(sf::CircleShape(17));
 	troneras.push_back(sf::CircleShape(17));
 	troneras.push_back(sf::CircleShape(17));
@@ -189,20 +180,37 @@ void Juego::Inicializa()
 
 	generaBolas();
 	Jugador::Instance()->setPointer(textura);
-	//Mapa::Instance()->setValues();
 
-	//TODO: cambiar por 45?
+	GeneraAbaco();
+}
+void Juego::Reinicia(){
+	CambiarEstado(EstadoApuntar::Instancia());
+
+	bolas.clear();
+	barra.clear();
+	caidas.clear();
+	generaBolas();
+	Jugador::Instance()->setPuntuacion(0);
+	Jugador::Instance()->setPointer(textura);
+
+	//limpia todos los estados
+	EstadoAnimacionAbaco::Instancia()->Limpiar();
+	abaco.clear();
+	GeneraAbaco();
+}
+
+void Juego::GeneraAbaco(){
 	Abaco pieza;
 	sf::RectangleShape sprite;
 	for (int i = 0; i < 50; i++)
 	{
-		//genera la barras
+		//genera las piezas del abaco
 		if ((i + 1) % 5 != 0)
 		{
 			sprite.setSize(sf::Vector2f(5, 10));
 			sprite.setFillColor(sf::Color::Red);
 			sprite.setPosition(290 + i * 10, 500);
-			pieza.setPosPR(sf::Vector2(290.f + i * 10, 500.f));
+			pieza.setPosPR(sf::Vector2f(290.f + i * 10, 500.f));
 			pieza.setPosSg(sf::Vector2f(290.f + i * 10, 500.f));
 		}
 		else
@@ -210,7 +218,7 @@ void Juego::Inicializa()
 			sprite.setSize(sf::Vector2f(5, 15));
 			sprite.setFillColor(sf::Color::Blue);
 			sprite.setPosition(290 + i * 10, 495);
-			pieza.setPosPR(sf::Vector2(290.f + i * 10, 495.f));
+			pieza.setPosPR(sf::Vector2f(290.f + i * 10, 495.f));
 			pieza.setPosSg(sf::Vector2f(290.f + i * 10, 495.f));
 		}
 		pieza.sprite = sprite;
@@ -221,7 +229,6 @@ void Juego::Inicializa()
 		EstadoAnimacionAbaco::Instancia()->piezas.push_back(&abaco[i]);
 	}
 }
-
 Juego::Juego()
 {
 	//ctor
