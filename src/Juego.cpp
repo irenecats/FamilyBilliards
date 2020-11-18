@@ -1,6 +1,7 @@
 #include <Juego.h>
 #include <EstadoAnimacionAbaco.h>
 #include <EstadoApuntar.h>
+#include <EstadoVictoria.h>
 Juego* Juego::instancia = 0;
 Juego* Juego::Instance()
 {
@@ -17,10 +18,7 @@ void Juego::prepararVentana()
 	printf("Movimiento con las flechas del teclado\n");
 	printf("Shift para que el pointer se mueva mas rapido\n");
 	printf("Espacio para preparar golpe y otra vez espacio para golpear\n");
-	printf("Si volver al moddo apuntar vuelve a pulsar las flechas del teclado\n");
-	printf("---------\n");
-	printf("Pulsa R para resetar la partida\n");
-	printf("Pulsa D para ver las colisiones\n");
+	printf("Para volver al modo apuntar pulsa las flechas del teclado\n");
 	printf("---------\n");
 	printf("Estado 0: Apunto");
 
@@ -44,18 +42,15 @@ void Juego::bucleJuego()
         while (ventana.pollEvent(event))
         {
 			estados->ManejarEventos(event);
+			if(event.key.code == sf::Keyboard::L){
+				Juego::Instance()->CambiarEstado(EstadoVictoria::Instancia());
+			}
         }
 
 		if (relojUpdate.getElapsedTime().asMilliseconds() > UPDATE_TIME)
 		{
 			float timeElapsed = relojUpdate.restart().asMilliseconds();
 			estados->Update(timeElapsed);
-
-			if (sf::Keyboard::isKeyPressed(sf::Keyboard::L))
-			{
-				std::cout<<"Pulsado"<<std::endl;
-				Reinicia();
-			}
 		}
 
 		float percentick = std::min(1.f, (float)relojUpdate.getElapsedTime().asMilliseconds() / UPDATE_TIME);
@@ -180,6 +175,7 @@ void Juego::Inicializa()
 
 	generaBolas();
 	Jugador::Instance()->setPointer(textura);
+	EstadoVictoria::Instancia()->setFuente();
 
 	GeneraAbaco();
 }

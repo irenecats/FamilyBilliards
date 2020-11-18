@@ -1,5 +1,6 @@
 #include <EstadoAnimacionAbaco.h>
 #include <EstadoApuntar.h>
+#include <EstadoVictoria.h>
 #include <Juego.h>
 
 EstadoAnimacionAbaco EstadoAnimacionAbaco::instancia;
@@ -41,8 +42,8 @@ void EstadoAnimacionAbaco::Update(float timeElapsed)
 		Jugador::Instance()->addPuntuacion(nuevosPuntos);
 		if (ganado)
 		{
-			std::cout<<"Aqui iria la pantalla de victoria"<<std::endl;
-			Juego::Instance()->CambiarEstado(EstadoApuntar::Instancia());
+			std::cout<<"has ganado, yay"<<std::endl;
+			Juego::Instance()->CambiarEstado(EstadoVictoria::Instancia());
 		}
 		else
 		{

@@ -9,6 +9,7 @@ public:
 	void ManejarEventos(sf::Event event);
 	void Update(float timeElapsed);
 	void Render(float percentick);
+	void setFuente();
 
 	static EstadoVictoria* Instancia()
 	{
@@ -20,4 +21,7 @@ protected:
 
 private:
 	static EstadoVictoria instancia;
+	sf::Text textoVictoria;
+	sf::Text textoReset;
+	sf::Font fuente;
 };
