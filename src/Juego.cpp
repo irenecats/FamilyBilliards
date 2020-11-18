@@ -42,9 +42,6 @@ void Juego::bucleJuego()
         while (ventana.pollEvent(event))
         {
 			estados->ManejarEventos(event);
-			if(event.key.code == sf::Keyboard::L){
-				Juego::Instance()->CambiarEstado(EstadoVictoria::Instancia());
-			}
         }
 
 		if (relojUpdate.getElapsedTime().asMilliseconds() > UPDATE_TIME)
