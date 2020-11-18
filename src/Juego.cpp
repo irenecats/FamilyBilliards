@@ -85,6 +85,8 @@ void Juego::bucleJuego()
 		{
 			abaco[i].Render(ventana, percentick);
 		}
+
+		Jugador::Instance()->RenderPoints(ventana);
         ventana.display();
     }
 }
