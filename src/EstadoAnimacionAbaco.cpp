@@ -11,14 +11,14 @@ void EstadoAnimacionAbaco::Inicializar()
 
 	animando = true;
 	puntosActuales = Jugador::Instance()->getPuntuacion();
-	posFin = (100 + (puntosActuales)*10);
+	posFin = (70 + (puntosActuales)*10);
 }
 void EstadoAnimacionAbaco::Limpiar()
 {
 	nuevosPuntos = 0;
 	ganado = false;
 	piezas.clear();
-	posFin = 100;
+	posFin = 70;
 }
 
 void EstadoAnimacionAbaco::ManejarEventos(sf::Event event)

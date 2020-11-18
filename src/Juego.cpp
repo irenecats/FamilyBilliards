@@ -206,16 +206,16 @@ void Juego::GeneraAbaco(){
 			sprite.setSize(sf::Vector2f(5, 10));
 			sprite.setFillColor(sf::Color::Red);
 			sprite.setPosition(290 + i * 10, 500);
-			pieza.setPosPR(sf::Vector2f(290.f + i * 10, 500.f));
-			pieza.setPosSg(sf::Vector2f(290.f + i * 10, 500.f));
+			pieza.setPosPR(sf::Vector2f(240.f + i * 10, 500.f));
+			pieza.setPosSg(sf::Vector2f(240.f + i * 10, 500.f));
 		}
 		else
 		{
 			sprite.setSize(sf::Vector2f(5, 15));
 			sprite.setFillColor(sf::Color::Blue);
 			sprite.setPosition(290 + i * 10, 495);
-			pieza.setPosPR(sf::Vector2f(290.f + i * 10, 495.f));
-			pieza.setPosSg(sf::Vector2f(290.f + i * 10, 495.f));
+			pieza.setPosPR(sf::Vector2f(240.f + i * 10, 495.f));
+			pieza.setPosSg(sf::Vector2f(240.f + i * 10, 495.f));
 		}
 		pieza.sprite = sprite;
 		abaco.push_back(pieza);
